@@ -1,0 +1,28 @@
+# Web Framework
+flask==2.3.2
+flask-sqlalchemy==3.1.1
+
+# Database
+psycopg==3.1.16
+python-dotenv==1.0.0
+
+# News API and Data Processing
+newsapi-python==0.2.7
+pandas==2.1.4
+
+# Machine Learning and NLP
+transformers==4.36.2
+torch==2.1.2  # Required for transformers
+
+# Sentiment Analysis
+scikit-learn==1.3.2
+
+# Development and Debugging
+pytest==7.4.4
+pytest-xprocess==0.23.0
+coverage==7.4.0
+
+# Optional but Recommended
+requests==2.31.0  # For API calls
+
+pytest-cov==4.1.0
