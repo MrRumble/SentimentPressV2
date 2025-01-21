@@ -4,15 +4,14 @@ from flask_cors import CORS
 from flask import Blueprint, jsonify, request, current_app
 from app.repositories.search_result_repository import SearchResultRepository    
 from app.utils.database import get_flask_database_connection
-from app.models import SearchResult
 
 query_route = Blueprint('query_route', __name__)
 CORS(query_route)
+processor = QueryProcessor()
 
 @query_route.route("/query", methods=["POST"])
 def query():
     connection = get_flask_database_connection(current_app)
-    processor = QueryProcessor()
     search_result_repository = SearchResultRepository(connection)
     data = request.get_json()
     query_text = data.get('query', '').lower().strip()
