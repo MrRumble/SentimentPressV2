@@ -61,7 +61,7 @@
   }
   
   .nested-content {
-    padding: 10px;
+    padding: 25px;
     border: 1px solid #ccc;
     border-radius: 5px;
   }
@@ -71,3 +71,4 @@
     color: white; /* Change text color */
     font-weight: bold; /* Optional: Make the active tab text bold */
   }
+
