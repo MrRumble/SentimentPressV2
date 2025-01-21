@@ -4,7 +4,9 @@ import { FcNegativeDynamic } from "react-icons/fc";
 import { FcPositiveDynamic } from "react-icons/fc";
 import { SiCoveralls } from "react-icons/si";
 import { IoSearchCircle } from "react-icons/io5";
+import { BiAnalyse } from "react-icons/bi";
 
+import Speedometer from '../Speedometer/Speedometer';
 
 const QueryComponent = () => {
   const [query, setQuery] = useState('');
@@ -92,19 +94,19 @@ const QueryComponent = () => {
             <div className="nested-data">
             <div className="nested-data-item">
                 <div className="grid-item">
-                Total Articles Analysed: {result.query_info.total_articles}
+                <BiAnalyse style={{color: '#008000'}} />    Articles Analysed: {result.query_info.total_articles}
                 </div>
                 <div className="grid-item">
-                Positive Count: {result.query_info.positive_count}
+                <FcPositiveDynamic />    Positive Count: {result.query_info.positive_count}
                 </div>
                 <div className="grid-item">
-                Negative Count: {result.query_info.negative_count}
+                <FcNegativeDynamic />    Negative Count: {result.query_info.negative_count}
                 </div>
                 
             </div>
             <div className="nested-data-item">
-            <div className="grid-item">
-                Total Sentiment: {result.query_info.mean_sentiment}
+            <div className="grid-item2">
+                <Speedometer value={parseFloat(result.query_info.mean_sentiment)} />
                 </div>
             </div>
         </div>

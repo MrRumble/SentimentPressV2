@@ -12,6 +12,10 @@
     border: 1px solid #ddd;
     margin: 10px 0;
   }
+  .grid-item2 {
+    padding: 10px;
+    margin: 10px 0;
+  }
   
   /* Nested grid inside .grid, now named nested-data */
   .nested-data {
