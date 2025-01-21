@@ -1,0 +1,40 @@
+/* General Reset */
+body, html, .homepage {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    height: 100%;                 /* Ensures the page takes full height of the viewport */
+}
+
+.homepage {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    grid-template-rows: 1fr;       /* Single row with columns taking full height */
+    height: 100vh;                 /* Full height of the viewport */
+    overflow: hidden;              /* Prevents scrolling the entire page */
+}
+
+.left-column {
+    overflow-y: auto;              /* Allow scrolling in the left column */
+    padding: 20px;                 /* Optional: Add padding for better content separation */
+}
+
+.right-column {
+    display: flex;
+    justify-content: center;       /* Center the content horizontally */
+    align-items: start;            /* Align the content at the top */
+    position: sticky;              /* Sticky positioning */
+    top: 0;                        /* Stick to the top of the viewport */
+    height: 100vh;                 /* Take full height of the viewport */
+    padding: 20px;                 /* Optional: Add padding */
+}
+
+.spinning-globe {
+    display: flex;
+    justify-content: center;       /* Center horizontally */
+    align-items: center;           /* Center vertically */
+    height: 500px;                 /* Fixed height */
+    width: 500px;                  /* Fixed width */
+    border-radius: 10px;           /* Optional: Rounded corners */
+    overflow: hidden;              /* Optional: Clip overflow */
+}

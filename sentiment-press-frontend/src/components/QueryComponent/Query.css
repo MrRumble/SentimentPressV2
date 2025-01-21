@@ -1,0 +1,69 @@
+
+ /* Outer grid */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;  /* Single column for the main data */
+    gap: 20px;
+    border: 1px solid white;
+  } 
+  /* Individual items in the outer grid */
+  .grid-item {
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin: 10px 0;
+  }
+  
+  /* Nested grid inside .grid, now named nested-data */
+  .nested-data {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 15px;
+    padding: 10px;
+  }
+  
+  /* Styling for items inside nested-data */
+  .nested-data-item {
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+
+  /* Summary Box Styling */
+  .summary {
+    grid-column: span 4; /* Span this section across all 4 columns */
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  /* Styling Nested Grid */
+  .nested-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Three columns for tabs */
+    gap: 10px;
+    margin-bottom: 10px;
+    cursor: pointer; /* Pointer for clickable items */
+  }
+  
+  .nested-item {
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .nested-item:hover {
+    background: #ddd;
+  }
+  
+  .nested-content {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .nested-item.active {
+    background: #920089; /* Highlight color for active tab */
+    color: white; /* Change text color */
+    font-weight: bold; /* Optional: Make the active tab text bold */
+  }
