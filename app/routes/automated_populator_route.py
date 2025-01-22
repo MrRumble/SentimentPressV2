@@ -13,7 +13,7 @@ news_categories = [
     "World", "Politics", "Business", "Science", "Health", "Sports",
     "Entertainment", "Lifestyle", "Education", "Environment", "Travel", "Culture", "UK", "Finance",
     "Automotive", "Music", "Movies", "Television", "Social Media",
-    "Gaming", "Cryptocurrency", "Weather", "Crime", "Starmer"
+    "Gaming", "Cryptocurrency", "Weather", "Crime", "Starmer",
     "Military", "Fashion", "Celebrity", "Technology", "Startup", "Trump", "AI"
 ]
 

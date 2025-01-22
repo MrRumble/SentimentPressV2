@@ -6,6 +6,9 @@ import { FcPositiveDynamic } from "react-icons/fc";
 import { SiCoveralls } from "react-icons/si";
 import { IoSearchCircle } from "react-icons/io5";
 import { BiAnalyse } from "react-icons/bi";
+import { IoIosHappy } from "react-icons/io";
+import { IoIosSad } from "react-icons/io";
+
 
 import Speedometer from '../Speedometer/Speedometer';
 
@@ -147,25 +150,41 @@ const QueryComponent = () => {
                 {activeSection === 'top3' && (
                   <Slider {...carouselSettings}>
                     {result.top3.map((article, index) => (
-                      <div key={index} className="carousel-item">
-                        <strong>{article.title}</strong>
-                        <p>Source: {article.source}</p>
-                        <p>Sentiment: {article.sentiment}</p>
-                        <p>{article.description}</p>
-                        <p>Published Date: {article.published_date}</p>
-                      </div>
-                    ))}
+  <div key={index} className="carousel-item">
+    <strong style={{ display: "block", borderBottom: "1px solid #FFFFFF", paddingBottom: "5px", marginBottom: "10px" }}>
+      <IoIosHappy style={{ color: 'green' }} /> {article.title}
+    </strong>
+    <p style={{ fontStyle: "italic", color: "red" }}>Source: {article.source}</p>
+    <p>{article.description}</p>
+    <p style={{ color: "lightblue" }}>
+      Published Date:{" "}
+      {new Date(article.published_date).toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      })}
+    </p>
+  </div>
+))}
                   </Slider>
                 )}
                 {activeSection === 'bottom3' && (
                   <Slider {...carouselSettings}>
                     {result.bottom3.map((article, index) => (
                       <div key={index} className="carousel-item">
-                        <strong>{article.title}</strong>
-                        <p>Source: {article.source}</p>
-                        <p>Sentiment: {article.sentiment}</p>
+                        <strong style={{ display: "block", borderBottom: "1px solid #FFFFFF", paddingBottom: "5px", marginBottom: "10px" }}>
+                        <IoIosSad style={{ color: 'red' }}/>  {article.title}
+                        </strong>
+                        <p style={{ fontStyle: "italic", color: "red" }}>Source: {article.source}</p>
                         <p>{article.description}</p>
-                        <p>Published Date: {article.published_date}</p>
+                        <p style={{ color: "lightblue" }}>
+                          Published Date:{" "}
+                          {new Date(article.published_date).toLocaleDateString("en-GB", {
+                            day: "2-digit",
+                            month: "long",
+                            year: "numeric",
+                          })}
+                        </p>
                       </div>
                     ))}
                   </Slider>
