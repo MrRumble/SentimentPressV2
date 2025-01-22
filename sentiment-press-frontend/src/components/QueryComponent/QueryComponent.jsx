@@ -152,7 +152,7 @@ const QueryComponent = () => {
                     {result.top3.map((article, index) => (
   <div key={index} className="carousel-item">
     <strong style={{ display: "block", borderBottom: "1px solid #FFFFFF", paddingBottom: "5px", marginBottom: "10px" }}>
-      <IoIosHappy style={{ color: 'green' }} /> {article.title}
+      <IoIosHappy style={{ color: 'green', font }} /> {article.title}
     </strong>
     <p style={{ fontStyle: "italic", color: "red" }}>Source: {article.source}</p>
     <p>{article.description}</p>
