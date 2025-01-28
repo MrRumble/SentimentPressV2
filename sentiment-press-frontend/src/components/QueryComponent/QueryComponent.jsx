@@ -150,22 +150,22 @@ const QueryComponent = () => {
                 {activeSection === 'top3' && (
                   <Slider {...carouselSettings}>
                     {result.top3.map((article, index) => (
-  <div key={index} className="carousel-item">
-    <strong style={{ display: "block", borderBottom: "1px solid #FFFFFF", paddingBottom: "5px", marginBottom: "10px" }}>
-      <IoIosHappy style={{ color: 'green', font }} /> {article.title}
-    </strong>
-    <p style={{ fontStyle: "italic", color: "red" }}>Source: {article.source}</p>
-    <p>{article.description}</p>
-    <p style={{ color: "lightblue" }}>
-      Published Date:{" "}
-      {new Date(article.published_date).toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      })}
-    </p>
-  </div>
-))}
+                      <div key={index} className="carousel-item">
+                        <strong style={{ display: "block", borderBottom: "1px solid #FFFFFF", paddingBottom: "5px", marginBottom: "10px" }}>
+                          <IoIosHappy style={{ color: 'green'}} /> {article.title}
+                        </strong>
+                        <p style={{ fontStyle: "italic", color: "red" }}>Source: {article.source}</p>
+                        <p>{article.description}</p>
+                        <p style={{ color: "lightblue" }}>
+                          Published Date:{" "}
+                          {new Date(article.published_date).toLocaleDateString("en-GB", {
+                            day: "2-digit",
+                            month: "long",
+                            year: "numeric",
+                          })}
+                        </p>
+                      </div>
+                ))}
                   </Slider>
                 )}
                 {activeSection === 'bottom3' && (

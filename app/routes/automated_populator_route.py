@@ -11,11 +11,11 @@ CORS(populate_route)
 
 news_categories = [
     "World", "Politics", "Business", "Science", "Health", "Sports",
-    "Entertainment", "Lifestyle", "Education", "Environment", "Travel", "Culture", "UK", "Finance",
-    "Automotive", "Music", "Movies", "Television", "Social Media",
-    "Gaming", "Cryptocurrency", "Weather", "Crime", "Starmer",
-    "Military", "Fashion", "Celebrity", "Technology", "Startup", "Trump", "AI"
-]
+    "Entertainment", "Education", "Environment", "UK", 
+    "Finance", "Music", "Movies", "Television",
+    'technology', "stock market", "Cryptocurrency", "Weather", "Crime", "Starmer",
+    "war", "Trump", "AI", "Rugby", 'Gaza', 'Israel', 'Russia', 'Ukraine'
+    ]
 
 @populate_route.route('/populate_database', methods=['POST'])
 def populate_database():
@@ -33,13 +33,23 @@ def populate_database():
     try:
         start_time = time.time()  # Record start time
         print("Populating the database with predefined news categories...")
+        
         for category in news_categories:
-            print(f"Populating: {category}...")
-            _, search_result = processor.process_query(category)
-            search_result_repository.create(search_result)
+            # First, check if a search result exists for today
+            existing_result = search_result_repository.get_query_result_if_it_exists_today(category)
+            
+            if existing_result:
+                print(f"Search for category '{category}' already populated today.")
+            else:
+                # Proceed to process and insert the result if not found
+                print(f"Populating: {category}...")
+                _, search_result = processor.process_query(category)
+                search_result_repository.create(search_result)
+        
         end_time = time.time()  # Record end time
         duration = end_time - start_time
         print(f"Database population completed in {duration:.2f} seconds.")
         return jsonify({"message": "Database population completed successfully"}), 200
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500

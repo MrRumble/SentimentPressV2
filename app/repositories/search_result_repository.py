@@ -78,4 +78,41 @@ class SearchResultRepository:
             )
         else:
             return None
+        
+    def get_sentiment_over_time(self, search_terms):
+        """
+        Retrieves the sentiment data for each search term over the last 30 days,
+        with distinct entries per search term per day.
+        """
+        # SQL query for getting sentiment data without duplicates from the same day
+        query = """
+            SELECT DISTINCT ON (search_term, created_at::date) 
+                search_term, 
+                mean_sentiment, 
+                created_at::date AS date, 
+                main_headline
+            FROM search_results
+            WHERE search_term = ANY(%s)
+            AND created_at >= CURRENT_DATE - INTERVAL '30 days'
+            ORDER BY search_term, created_at::date, created_at ASC;
+        """
+        
+        # Execute the query with the search_terms as a parameter
+        rows = self._connection.execute(query, [search_terms])
+
+        # Check if any rows were returned
+        if not rows:
+            return []
+
+        # Process and return the results as a list of SearchResult objects
+        results = []
+        for row in rows:
+            results.append({
+                "search_term": row['search_term'],
+                "mean_sentiment": row['mean_sentiment'],
+                "date": row['date'],
+                "main_headline": row['main_headline'],
+            })
+        # print("REPO RESULTS:", results)
+        return results
 
