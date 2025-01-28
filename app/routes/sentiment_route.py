@@ -11,15 +11,10 @@ sentiment_route = Blueprint('sentiment_route', __name__)
 CORS(sentiment_route)
 
 
-def get_random_color():
-    # Helper function to generate a random color for each dataset
-    return f"rgb({int(255 * random.random())}, {int(255 * random.random())}, {int(255 * random.random())})"
-
-
 @sentiment_route.route('/api/get_sentiment', methods=['GET'])
 def get_sentiment():
     # Fetch a single search term from query parameters
-    search_term = request.args.get('search_term')
+    search_term = request.args.get('search_term').lower()
     if not search_term:
         return jsonify({"error": "search_term is required"}), 400
 
@@ -31,7 +26,6 @@ def get_sentiment():
     try:
         # Fetch the data from the database for the given search term
         results = search_result_repository.get_sentiment_over_time(search_term)
-        print(f"Results from DB: {results}")  # Add a print statement to inspect data
 
         # Organize the data in a way that can be used for plotting
         organized_data = defaultdict(list)
@@ -45,8 +39,6 @@ def get_sentiment():
                 'sentiment': mean_sentiment, 
                 'summary': summary
             })
-
-        print(f"Organized Data: {organized_data}")  # Print organized data for inspection
         
         # Prepare the data for Chart.js in the required format
         final_data = {
@@ -56,14 +48,12 @@ def get_sentiment():
                     "data": [
                         {"x": date, "y": organized_data[date][0]['sentiment'], "summary": organized_data[date][0]['summary']}
                         for date in sorted(organized_data.keys())
-                    ],
-                    "borderColor": get_random_color(),  # Function for a random color for the line
+                    ],  # Function for a random color for the line
                     "fill": False  # Line graph without filling the area beneath
                 }
             ]
         }
 
-        print(f"Final Data for Chart: {final_data}")  # Print final data for chart plotting
         return jsonify(final_data), 200
 
     except Exception as e:
