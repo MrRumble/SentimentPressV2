@@ -1,6 +1,6 @@
 from app.models.search_result_model import SearchResult
 import json
-from datetime import date
+from datetime import date, timedelta
 
 class SearchResultRepository:
     def __init__(self, connection):
@@ -79,40 +79,42 @@ class SearchResultRepository:
         else:
             return None
         
-    def get_sentiment_over_time(self, search_terms):
+    def get_sentiment_over_time(self, search_term):
         """
-        Retrieves the sentiment data for each search term over the last 30 days,
+        Retrieves the sentiment data for a single search term over the last 30 days,
         with distinct entries per search term per day.
         """
-        # SQL query for getting sentiment data without duplicates from the same day
+        # SQL query for getting sentiment data without duplicates from the same day for a single search term
         query = """
-            SELECT DISTINCT ON (search_term, created_at::date) 
+            SELECT DISTINCT ON (created_at::date)
                 search_term, 
                 mean_sentiment, 
                 created_at::date AS date, 
                 main_headline
             FROM search_results
-            WHERE search_term = ANY(%s)
+            WHERE search_term = %s
             AND created_at >= CURRENT_DATE - INTERVAL '30 days'
-            ORDER BY search_term, created_at::date, created_at ASC;
+            ORDER BY created_at::date, created_at ASC;
         """
         
-        # Execute the query with the search_terms as a parameter
-        rows = self._connection.execute(query, [search_terms])
+        # Execute the query with the search_term as a parameter
+        rows = self._connection.execute(query, [search_term])
 
         # Check if any rows were returned
         if not rows:
             return []
 
-        # Process and return the results as a list of SearchResult objects
+        # Process and return the results as a list of dictionaries
         results = []
         for row in rows:
+            # Here we adjust the date to match the date of the articles
+            adjusted_date = row['date'] - timedelta(days=1)
+        
             results.append({
                 "search_term": row['search_term'],
                 "mean_sentiment": row['mean_sentiment'],
-                "date": row['date'],
+                "date": adjusted_date,  # This will be the date minus one day
                 "main_headline": row['main_headline'],
             })
 
         return results
-

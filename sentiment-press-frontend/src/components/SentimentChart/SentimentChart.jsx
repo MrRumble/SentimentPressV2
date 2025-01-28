@@ -18,16 +18,25 @@ ChartJS.register(ChartAnnotation);
 
 // Registering Chart.js components
 ChartJS.register(Title, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, TimeScale);
+ChartJS.defaults.plugins.legend.labels.color = "white"; // Legend labels
+ChartJS.defaults.plugins.tooltip.bodyColor = "white";   // Tooltip body
+ChartJS.defaults.plugins.tooltip.titleColor = "white";  // Tooltip title
+ChartJS.defaults.font.color = "white";  
 
-const SentimentChart = () => {
+const SentimentChart = ({ searchTerm }) => {
   const [chartData, setChartData] = useState(null);  
   const chartRef = useRef(null);
 
+  // Fetch data only if searchTerm is not empty
   useEffect(() => {
     const fetchData = async () => {
+      if (!searchTerm) {
+        return; // Do not fetch if searchTerm is empty
+      }
       try {
         const baseURL = process.env.REACT_APP_API_BASE_URL;
-        const response = await fetch(`${baseURL}/api/get_sentiments`);
+        // Request the sentiment data for the specific search term
+        const response = await fetch(`${baseURL}/api/get_sentiment?search_term=${searchTerm}`);
         const data = await response.json();
         console.log("Fetched Data:", data);
 
@@ -52,8 +61,10 @@ const SentimentChart = () => {
       }
     };
 
-    fetchData();
-  }, []); // Fetch only once on mount
+    if (searchTerm) {
+      fetchData();
+    }
+  }, [searchTerm]); // Re-fetch data whenever searchTerm changes
 
   const options = {
     responsive: true,
@@ -61,22 +72,20 @@ const SentimentChart = () => {
       title: {
         display: true,
         text: "Sentiment Over Time",
+        color: "white"
       },
       tooltip: {
         callbacks: {
-          title: () => '',  // Hides the top line (title) in the tooltip
+          title: () => '',
           label: (tooltipItem) => {
             const point = tooltipItem.raw;
-      
-            // Format the date (stored as point.x) into a user-friendly format
             const formattedDate = new Intl.DateTimeFormat('en-GB', {
               weekday: 'short',
               year: 'numeric',
               month: 'short',
               day: 'numeric',
             }).format(point.x);
-      
-            // Return an array with multiline text
+  
             return [
               `Date: ${formattedDate}`,
               `Sentiment: ${point.y}`,
@@ -87,21 +96,20 @@ const SentimentChart = () => {
         intersect: false,
         mode: "nearest",
       },
-      
       annotation: {
         annotations: [
           {
             type: 'box',
             yMin: 0,
             yMax: 1,
-            backgroundColor: 'rgba(0,255,0,0.2)',  // Green shading for above 0
+            backgroundColor: 'rgba(0,255,0,0.2)', 
             borderWidth: 1,
           },
           {
             type: 'box',
             yMin: -1,
             yMax: 0,
-            backgroundColor: 'rgba(255, 0, 0, 0.22)',  // Red shading for below 0
+            backgroundColor: 'rgba(255, 0, 0, 0.22)', 
             borderWidth: 1,
           },
         ],
@@ -112,27 +120,39 @@ const SentimentChart = () => {
         type: "time",
         time: {
           unit: "day",
-          tooltipFormat: "ll",  // Format used by the tooltip for the date
+          tooltipFormat: "ll",
+          color: 'white'
         },
         title: {
           display: true,
           text: "Date",
+          color: 'white'
+        },
+        ticks: {
+          color: 'white', // Date labels (X-axis ticks) color
         },
       },
+      
       y: {
-        min: -1,
-        max: 1,
+        min: -1, // Extend the lower limit
+        max: 1,  // Extend the upper limit
         title: {
           display: true,
           text: "Sentiment Score",
+          color: 'white'
+        },
+        ticks: {
+          stepSize: 0.5, // Optional: adjust tick spacing
+          color: "white"
         },
       },
+      
     },
   };
   
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: 'flex', height: '95%', width: "95%" }}>
       <div style={{ flex: 1 }}>
         {chartData ? (
           <Line

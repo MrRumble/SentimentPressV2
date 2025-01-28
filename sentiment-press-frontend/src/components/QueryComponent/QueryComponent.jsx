@@ -12,7 +12,7 @@ import { IoIosSad } from "react-icons/io";
 
 import Speedometer from '../Speedometer/Speedometer';
 
-const QueryComponent = () => {
+const QueryComponent = ( { onSearch }) => {
   const [query, setQuery] = useState('');
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -41,6 +41,7 @@ const QueryComponent = () => {
       if (response.ok) {
         const data = await response.json();
         setResult(data);
+        onSearch(query);
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Something went wrong. Please try again.');

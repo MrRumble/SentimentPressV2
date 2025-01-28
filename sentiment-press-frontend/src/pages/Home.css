@@ -3,38 +3,52 @@ body, html, .homepage {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    height: 100%;                 /* Ensures the page takes full height of the viewport */
+    height: 100%;  /* Ensures the page takes full height of the viewport */
 }
 
 .homepage {
     display: grid;
     grid-template-columns: 1fr 1fr; /* Two equal columns */
-    grid-template-rows: 1fr;       /* Single row with columns taking full height */
-    height: 100vh;                 /* Full height of the viewport */
-    overflow: hidden;              /* Prevents scrolling the entire page */
+    grid-template-rows: 1fr;        /* Single row with columns taking full height */
+    height: 100vh;                  /* Full height of the viewport */
+    overflow: hidden;               /* Prevents scrolling the entire page */
 }
 
 .left-column {
-    overflow-y: auto;              /* Allow scrolling in the left column */
-    padding: 20px;                 /* Optional: Add padding for better content separation */
+    overflow-y: auto;               /* Allow scrolling in the left column */
+    padding: 5px;                  /* Optional: Add padding for better content separation */
 }
 
 .right-column {
+    display: grid;                  /* Use grid display to handle multiple rows */
+    grid-template-rows: 1fr 1fr;     /* Two rows of equal height */
+    height: 100vh;                   /* Take full height of the right column */
+    padding: 20px;                   /* Optional: Add padding */
+}
+
+.top-row {
     display: flex;
-    justify-content: center;       /* Center the content horizontally */
-    align-items: start;            /* Align the content at the top */
-    position: sticky;              /* Sticky positioning */
-    top: 0;                        /* Stick to the top of the viewport */
-    height: 100vh;                 /* Take full height of the viewport */
-    padding: 20px;                 /* Optional: Add padding */
+    justify-content: center;         /* Center the content horizontally */
+    align-items: center;             /* Center the content vertically */
+    position: sticky;                /* Sticky positioning */
+    top: 0;                          /* Stick to the top of the viewport */
+    height: 50%;                     /* First row takes half the height of the right column */
+    padding: 20px;                   /* Optional: Add padding */
+}
+
+.bottom-row {
+    display: flex;
+    justify-content: center;         /* Center content horizontally in bottom row */
+    align-items: flex-start;         /* Align content to the top in bottom row */
+    height: 100%;                     /* Second row takes half the height of the right column */                 
 }
 
 .spinning-globe {
     display: flex;
-    justify-content: center;       /* Center horizontally */
-    align-items: center;           /* Center vertically */
-    height: 500px;                 /* Fixed height */
-    width: 500px;                  /* Fixed width */
-    border-radius: 10px;           /* Optional: Rounded corners */
-    overflow: hidden;              /* Optional: Clip overflow */
+    justify-content: center;         /* Center horizontally */
+    align-items: center;             /* Center vertically */
+    height: 250px;                   /* Fixed height */
+    width: 250px;                    /* Fixed width */
+    border-radius: 10px;             /* Optional: Rounded corners */
+    overflow: hidden;                /* Optional: Clip overflow */
 }
