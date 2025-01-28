@@ -12,12 +12,15 @@ import {
   TimeScale,
 } from "chart.js";
 import "chartjs-adapter-luxon"; // Import Luxon date adapter
+import ChartAnnotation from 'chartjs-plugin-annotation';
+
+ChartJS.register(ChartAnnotation);
 
 // Registering Chart.js components
 ChartJS.register(Title, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, TimeScale);
 
 const SentimentChart = () => {
-  const [chartData, setChartData] = useState(null);
+  const [chartData, setChartData] = useState(null);  
   const chartRef = useRef(null);
 
   useEffect(() => {
@@ -50,14 +53,7 @@ const SentimentChart = () => {
     };
 
     fetchData();
-
-    // Cleanup the chart instance when the component unmounts or data changes
-    return () => {
-      if (chartRef.current && chartRef.current.chartInstance) {
-        chartRef.current.chartInstance.destroy();
-      }
-    };
-  }, []); // Empty dependency array to fetch data once on mount
+  }, []); // Fetch only once on mount
 
   const options = {
     responsive: true,
@@ -68,21 +64,55 @@ const SentimentChart = () => {
       },
       tooltip: {
         callbacks: {
-          // Custom tooltip callback to show more detailed information
+          title: () => '',  // Hides the top line (title) in the tooltip
           label: (tooltipItem) => {
             const point = tooltipItem.raw;
-            return `Sentiment: ${point.y}, Summary: ${point.summary}`; // Format tooltip label
+      
+            // Format the date (stored as point.x) into a user-friendly format
+            const formattedDate = new Intl.DateTimeFormat('en-GB', {
+              weekday: 'short',
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            }).format(point.x);
+      
+            // Return an array with multiline text
+            return [
+              `Date: ${formattedDate}`,
+              `Sentiment: ${point.y}`,
+              `Summary: ${point.summary}`,
+            ];
           },
         },
         intersect: false,
         mode: "nearest",
+      },
+      
+      annotation: {
+        annotations: [
+          {
+            type: 'box',
+            yMin: 0,
+            yMax: 1,
+            backgroundColor: 'rgba(0,255,0,0.2)',  // Green shading for above 0
+            borderWidth: 1,
+          },
+          {
+            type: 'box',
+            yMin: -1,
+            yMax: 0,
+            backgroundColor: 'rgba(255, 0, 0, 0.22)',  // Red shading for below 0
+            borderWidth: 1,
+          },
+        ],
       },
     },
     scales: {
       x: {
         type: "time",
         time: {
-          unit: "day",  // You can change this to "minute", "hour", etc., if you have smaller time intervals
+          unit: "day",
+          tooltipFormat: "ll",  // Format used by the tooltip for the date
         },
         title: {
           display: true,
@@ -99,18 +129,21 @@ const SentimentChart = () => {
       },
     },
   };
+  
 
   return (
-    <div>
-      {chartData ? (
-        <Line
-          data={chartData}
-          options={options}
-          ref={chartRef} // Storing chart reference for cleanup
-        />
-      ) : (
-        <p>Loading chart...</p>
-      )}
+    <div style={{ display: 'flex' }}>
+      <div style={{ flex: 1 }}>
+        {chartData ? (
+          <Line
+            data={chartData}
+            options={options}
+            ref={chartRef} // Storing chart reference for cleanup
+          />
+        ) : (
+          <p>Loading chart...</p>
+        )}
+      </div>
     </div>
   );
 };

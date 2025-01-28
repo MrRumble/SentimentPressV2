@@ -42,7 +42,7 @@ def get_sentiments():
         for row in results:
             search_term = row['search_term']
             mean_sentiment = float(row['mean_sentiment'])  # Convert Decimal to float
-            date = row['date']
+            date = row['date'].strftime('%Y-%m-%d')
             summary = row['main_headline']
             organized_data[search_term][date].append({
                 'sentiment': mean_sentiment, 

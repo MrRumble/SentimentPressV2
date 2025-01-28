@@ -113,6 +113,6 @@ class SearchResultRepository:
                 "date": row['date'],
                 "main_headline": row['main_headline'],
             })
-        # print("REPO RESULTS:", results)
+
         return results
 
