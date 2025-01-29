@@ -21,7 +21,7 @@ body, html, .homepage {
 
 .right-column {
     display: grid;                  /* Use grid display to handle multiple rows */
-    grid-template-rows: 1fr 1fr;     /* Two rows of equal height */
+    grid-template-rows: 1fr 2fr;     /* Two rows of equal height */
     height: 100vh;                   /* Take full height of the right column */
     padding: 20px;                   /* Optional: Add padding */
 }

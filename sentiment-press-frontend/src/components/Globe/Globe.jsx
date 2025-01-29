@@ -10,7 +10,7 @@ const Globe = ({ position = [0, 0, 0], scale = [2, 2, 2] }) => {
 
   useFrame(() => {
     if (globeRef.current) {
-      globeRef.current.rotation.y += 0.002; // Adjust rotation speed if needed
+      globeRef.current.rotation.y += 0.003; // Adjust rotation speed if needed
     }
   });
 
@@ -24,8 +24,8 @@ const Globe = ({ position = [0, 0, 0], scale = [2, 2, 2] }) => {
 const GlobeComponent = ({ position, scale, lightSettings = {}, style = {}, canvasProps = {} }) => {
   // Default light settings
   const defaultLightSettings = {
-    ambientLightIntensity: 0.5,
-    directionalLightPosition: [5, 5, 5],
+    ambientLightIntensity: 1.2,
+    directionalLightPosition: [1, 5, 5],
   };
 
   const { ambientLightIntensity, directionalLightPosition } = {
