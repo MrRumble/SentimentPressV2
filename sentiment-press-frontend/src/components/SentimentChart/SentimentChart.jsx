@@ -11,22 +11,22 @@ import {
   LineElement,
   TimeScale,
 } from "chart.js";
-import "chartjs-adapter-luxon"; // Import Luxon date adapter
+import "chartjs-adapter-luxon";
 import ChartAnnotation from "chartjs-plugin-annotation";
+import { FaExpandArrowsAlt } from "react-icons/fa";
+import { TiArrowMinimise } from "react-icons/ti";
 
-ChartJS.register(ChartAnnotation);
 
-// Registering Chart.js components
-ChartJS.register(Title, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, TimeScale);
-ChartJS.defaults.plugins.legend.labels.color = "white"; // Legend labels
-ChartJS.defaults.plugins.tooltip.bodyColor = "white";   // Tooltip body
-ChartJS.defaults.plugins.tooltip.titleColor = "white";  // Tooltip title
+ChartJS.register(ChartAnnotation, Title, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, TimeScale);
+ChartJS.defaults.plugins.legend.labels.color = "white";
+ChartJS.defaults.plugins.tooltip.bodyColor = "white";
+ChartJS.defaults.plugins.tooltip.titleColor = "white";
 
 const SentimentChart = ({ searchTerm }) => {
-  const [chartData, setChartData] = useState({ datasets: [] });  
+  const [chartData, setChartData] = useState({ datasets: [] });
+  const [isFullScreen, setIsFullScreen] = useState(false);
   const chartRef = useRef(null);
-  
-  // Add new dataset when the searchTerm changes
+
   useEffect(() => {
     if (!searchTerm) return;
 
@@ -37,20 +37,20 @@ const SentimentChart = ({ searchTerm }) => {
         const data = await response.json();
 
         const newDataset = {
-          label: searchTerm, // Label for the dataset
+          label: searchTerm,
           data: data.datasets[0].data.map((item) => ({
-            x: new Date(item.x), // Convert string date to JavaScript Date object
+            x: new Date(item.x),
             y: item.y,
-            summary: item.summary, // Keep summary for tooltips
+            summary: item.summary,
           })),
-          borderColor: getRandomColor(), // Assign a random color to differentiate datasets
+          borderColor: getRandomColor(),
           fill: false,
           tension: 0.4,
         };
 
         setChartData((prevData) => ({
           ...prevData,
-          datasets: [...prevData.datasets, newDataset], // Append new dataset
+          datasets: [...prevData.datasets, newDataset],
         }));
       } catch (error) {
         console.error("Error fetching sentiment data:", error);
@@ -60,15 +60,15 @@ const SentimentChart = ({ searchTerm }) => {
     fetchData();
   }, [searchTerm]);
 
-  // Generate random color for datasets
   const getRandomColor = () => {
-    const letters = "456789ABCDEF"; // A more moderate range for better visibility
+    const letters = "456789ABCDEF";
     let color = "#";
     for (let i = 0; i < 6; i++) {
       color += letters[Math.floor(Math.random() * letters.length)];
     }
     return color;
   };
+
   const options = {
     responsive: true,
     plugins: {
@@ -132,7 +132,7 @@ const SentimentChart = ({ searchTerm }) => {
           color: "white",
         },
         ticks: {
-          color: "white", // Date labels (X-axis ticks) color
+          color: "white",
         },
       },
       y: {
@@ -150,14 +150,69 @@ const SentimentChart = ({ searchTerm }) => {
       },
     },
   };
-{/* <div style={{ display: "flex", height: "95%", width: "95%" }}></div> */}
+
   return (
-    <div style={{ display: "flex", height: "95%", width: "95%" }}>
-      <div style={{ flex: 1 }}>
+    <div
+      style={{
+        display: "flex",
+        height: isFullScreen ? "100vh" : "95%",
+        width: isFullScreen ? "100vw" : "95%",
+        position: isFullScreen ? "fixed" : "relative",
+        top: isFullScreen ? 0 : "auto",
+        left: isFullScreen ? 0 : "auto",
+        zIndex: isFullScreen ? 1000 : "auto",
+        padding: isFullScreen ? "20px" : "0",
+        backgroundColor: isFullScreen ? "rgba(0, 0, 0, 0.95)": "transparent",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: isFullScreen ? "0" : "10px",
+
+      }}
+    >
+      {/* Expand Button */}
+      <button
+        onClick={() => setIsFullScreen(true)}
+        style={{
+          position: "absolute",
+          top: "10px",
+          right: "10px",
+          background: "transparent",
+          color: "white",
+          border: "none",
+          fontSize: "20px",
+          cursor: "pointer",
+          zIndex: 2000,
+        }}
+      >
+        <FaExpandArrowsAlt />
+      </button>
+
+      {/* Close Button for Full-Screen Mode */}
+      {isFullScreen && (
+        <button
+          onClick={() => setIsFullScreen(false)}
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "50px",
+            background: "transparent",
+            color: "white",
+            border: "none",
+            fontSize: "30px",
+            padding: "5px",
+            cursor: "pointer",
+            zIndex: 2001,
+          }}
+        >
+          <TiArrowMinimise />
+        </button>
+      )}
+
+      <div style={{ flex: 1, width: "100%", height: "100%" }}>
         {chartData.datasets.length > 0 ? (
           <Line data={chartData} options={options} ref={chartRef} />
         ) : (
-          <p>Loading chart...</p>
+          <p style={{ color: "white", textAlign: "center" }}>Loading chart...</p>
         )}
       </div>
     </div>
