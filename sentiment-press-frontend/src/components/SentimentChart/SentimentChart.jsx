@@ -46,6 +46,7 @@ const SentimentChart = ({ searchTerm }) => {
           borderColor: getRandomColor(),
           fill: false,
           tension: 0.4,
+          pointRadius: 4,
         };
 
         setChartData((prevData) => ({
@@ -59,6 +60,10 @@ const SentimentChart = ({ searchTerm }) => {
 
     fetchData();
   }, [searchTerm]);
+
+  const clearChart = () => {
+    setChartData({ datasets: [] });
+  };
 
   const getRandomColor = () => {
     const letters = "456789ABCDEF";
@@ -78,6 +83,13 @@ const SentimentChart = ({ searchTerm }) => {
         color: "white",
       },
       tooltip: {
+        backgroundColor: "rgba(0, 0, 0, 0.2)",
+        cornerRadius: 4,
+        displayColors: false,
+        position: "nearest",
+        caretPadding: 30, // Padding between the tooltip pointer and the tooltip body
+        xAlign: "center",  // Horizontally center the tooltip relative to the point
+        yAlign: "bottom", 
         callbacks: {
           title: () => "",
           label: (tooltipItem) => {
@@ -169,6 +181,7 @@ const SentimentChart = ({ searchTerm }) => {
 
       }}
     >
+      
       {/* Expand Button */}
       <button
         onClick={() => setIsFullScreen(true)}
@@ -185,6 +198,7 @@ const SentimentChart = ({ searchTerm }) => {
         }}
       >
         <FaExpandArrowsAlt />
+        
       </button>
 
       {/* Close Button for Full-Screen Mode */}
@@ -215,6 +229,8 @@ const SentimentChart = ({ searchTerm }) => {
           <p style={{ color: "white", textAlign: "center" }}>Loading chart...</p>
         )}
       </div>
+
+    
     </div>
   );
 };

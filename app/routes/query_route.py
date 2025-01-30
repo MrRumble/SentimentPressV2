@@ -39,6 +39,7 @@ def query():
 
     # If no result exists for today, process the query and save the result
     response_data_front_end, search_result = processor.process_query(query_text)
+    
     search_result_repository.create(search_result)
 
     return jsonify(response_data_front_end), 201
