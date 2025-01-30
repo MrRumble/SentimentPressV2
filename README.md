@@ -11,7 +11,8 @@ Next steps, incorperate USER service.
 
 Automatic populating script.
 
-Testing CI in github.
+Testing CI in github. Talk about testing.
 
 Tech stack.
+
 

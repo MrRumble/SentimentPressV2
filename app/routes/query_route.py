@@ -3,6 +3,8 @@ from flask import Blueprint
 from flask_cors import CORS
 from flask import Blueprint, jsonify, request, current_app
 from app.repositories.search_result_repository import SearchResultRepository    
+from app.repositories.search_metadata_repository import SearchMetadataRepository
+from app.models.search_metadata_model import SearchMetadata
 from app.utils.database import get_flask_database_connection
 
 query_route = Blueprint('query_route', __name__)
@@ -13,12 +15,16 @@ processor = QueryProcessor()
 def query():
     connection = get_flask_database_connection(current_app)
     search_result_repository = SearchResultRepository(connection)
+    search_metadata_repository = SearchMetadataRepository(connection)
     data = request.get_json()
     query_text = data.get('query', '').lower().strip()
 
     if not query_text:
             return jsonify({"error": "Query text cannot be empty"}), 400
 
+    meta_data = SearchMetadata(user_id=None, search_term=query_text)
+    search_metadata_repository.create(meta_data)
+    
     # Check if a result for the query exists today
     existing_result = search_result_repository.get_query_result_if_it_exists_today(query_text)      
     if existing_result:
@@ -39,7 +45,6 @@ def query():
 
     # If no result exists for today, process the query and save the result
     response_data_front_end, search_result = processor.process_query(query_text)
-    
     search_result_repository.create(search_result)
 
     return jsonify(response_data_front_end), 201
