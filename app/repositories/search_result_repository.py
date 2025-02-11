@@ -118,3 +118,36 @@ class SearchResultRepository:
             })
 
         return results
+
+    def get_queries_and_headlines(self):
+        """
+        Fetches search terms and their main headlines for the current day.
+        If no articles exist for a category, they are omitted.
+        """
+        today = date.today().strftime('%Y-%m-%d')
+        print(today)
+
+        news_categories = [
+            "world", "politics", "business", "science", "health", "sports",
+            "entertainment", "education", "environment", "uk", 
+            "finance", "music", "technology", "stock market", "cryptocurrency", 
+            "weather", "crime", "kier starmer", "war", "trump", "ai", 
+            "rugby", "gaza", "israel", "russia", "ukraine"
+        ]
+
+
+        query_str = """
+            SELECT search_term, main_headline
+            FROM search_results
+            WHERE search_term = ANY(%s) AND created_at::date = %s
+        """
+        
+        rows = self._connection.execute(query_str, [news_categories, today])
+
+        if not rows:
+            return []  # Return empty list if no results found
+
+        # Process and return the results as a list of dictionaries
+        results = [{"search_term": row["search_term"], "main_headline": row["main_headline"]} for row in rows]
+
+        return results
