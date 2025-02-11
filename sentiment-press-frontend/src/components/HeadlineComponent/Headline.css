@@ -1,0 +1,17 @@
+.headline-container {
+    position: relative; /* Allow absolute positioning of child elements */
+    height: 100px; /* Set height for the container so headlines stay in place */
+  }
+  
+  .headline {
+    position: absolute; /* Keep headlines stacked in the same spot */
+    top: 0; /* Ensure the headline is at the top of the container */
+    left: 0;
+    right: 0;
+  }
+  
+  /* Reduce line spacing for paragraphs */
+p {
+    line-height: 1.1;  /* Adjust this value to your desired line spacing */
+  }
+  

@@ -148,6 +148,6 @@ class SearchResultRepository:
             return []  # Return empty list if no results found
 
         # Process and return the results as a list of dictionaries
-        results = [{"search_term": row["search_term"], "main_headline": row["main_headline"]} for row in rows]
+        results = [{"search_term": row["search_term"].capitalize(), "main_headline": row["main_headline"]} for row in rows]
 
         return results

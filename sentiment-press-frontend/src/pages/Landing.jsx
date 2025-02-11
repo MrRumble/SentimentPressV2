@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { IoSearchCircle } from "react-icons/io5";
 import GlobeComponent from '../components/Globe/Globe';
 import About from '../components/About/About';
+import Headlines from '../components/HeadlineComponent/HeadlineComponent';
 import './Landing.css';
 
 const LandingPage = () => {
@@ -25,8 +26,23 @@ const LandingPage = () => {
           </div>
           <div className="website-name-landing">Sentiment Press</div>
         </div>
+
+        <div className="middle-row-landing">
+          {/* New nested rows inside the middle-row-landing */}
+          <div className="row-1-middle">
+           
+          </div>
+          <div className="row-2-middle">
+            {/* You can add additional components or content here */}
+            <div>Additional Content for Row 2</div>
+          </div>
+        </div>
+
+        <div className="bottom-row-landing">
+        <Headlines />
+        </div>
       </div>
-      
+
       <div className="right-column-landing">
         <div className="top-row-landing-right">
           <h1>Search for Sentiment Analysis</h1>
