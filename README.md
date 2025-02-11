@@ -15,4 +15,10 @@ Testing CI in github. Talk about testing.
 
 Tech stack.
 
+Not alwasy 100 articles analysed due to flattening.
 
+
+NEW SEARCH TERM DOESNT LOAD STRAIGHT ONTO CHART
+Add a note on chart about data only being available if searched before (limited api calls)
+create loading component
+finish landing page

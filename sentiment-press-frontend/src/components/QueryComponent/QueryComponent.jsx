@@ -1,19 +1,17 @@
-import React, { useState } from 'react';
-import Slider from "react-slick"; // Import react-slick
+import React, { useState, useEffect } from 'react';
+import Slider from "react-slick"; 
 import './Query.css';
 import { FcNegativeDynamic } from "react-icons/fc";
 import { FcPositiveDynamic } from "react-icons/fc";
 import { SiCoveralls } from "react-icons/si";
-import { IoSearchCircle } from "react-icons/io5";
 import { BiAnalyse } from "react-icons/bi";
 import { IoIosHappy } from "react-icons/io";
 import { IoIosSad } from "react-icons/io";
 
-
 import Speedometer from '../Speedometer/Speedometer';
+import SearchBar from '../../pages/Search';
 
-const QueryComponent = ( { onSearch }) => {
-  const [query, setQuery] = useState('');
+const QueryComponent = ({ onSearch, query }) => {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [activeSection, setActiveSection] = useState('summary'); // State to control which section is shown
@@ -61,45 +59,27 @@ const QueryComponent = ( { onSearch }) => {
     adaptiveHeight: true,
   };
 
+  useEffect(() => {
+    if (query) {
+      handleQuerySubmit(new Event('submit'));  // Automatically trigger search when query is passed
+    }
+  }, [query]);
+
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-      <h1>Search Query</h1>
-      <form onSubmit={handleQuerySubmit}>
-        <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Enter your query"
-            style={{
-              width: '100%',
-              padding: '10px',
-              fontSize: '16px',
-              boxSizing: 'border-box',
-            }}
-          />
-          <button
-            type="submit"
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: '16px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginLeft: '4px',
-            }}
-          >
-            <IoSearchCircle style={{ fontSize: '50px', color: '#920089' }} />
-          </button>
-        </div>
-      </form>
-
       {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
 
       {result && (
         <div style={{ marginTop: '20px' }}>
+            <SearchBar onSearch={onSearch} searchTerm={query} />
+          <div className="results-header">
+              Here's the sentiment analysis results for {query} from {new Date(Date.now() - 86400000).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })}:
+            </div>
+
           <div className="query-data">
             <div className="grid">
               <div className="data-column">
@@ -166,7 +146,7 @@ const QueryComponent = ( { onSearch }) => {
                           })}
                         </p>
                       </div>
-                ))}
+                    ))}
                   </Slider>
                 )}
                 {activeSection === 'bottom3' && (
