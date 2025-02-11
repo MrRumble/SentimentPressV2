@@ -19,3 +19,21 @@ class SearchMetadataRepository:
         result = self._connection.execute(query, params)
         search_metadata.search_metadata_id = result[0]['search_metadata_id']
         return search_metadata
+
+    def get_todays_top_search_term(self):
+        query = """
+        SELECT search_term, COUNT(*) as search_count
+        FROM search_metadata
+        WHERE DATE(searched_at) = CURRENT_DATE
+        GROUP BY search_term
+        ORDER BY search_count DESC
+        LIMIT 1;
+        """
+        result = self._connection.execute(query)
+        
+        if result:  # Check if result is not empty
+            top_search_term = result[0]  # The first item will be the top search term
+            return top_search_term['search_term'], top_search_term['search_count']
+        else:
+            return None, 0  # No searches today
+

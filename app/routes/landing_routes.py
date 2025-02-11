@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, current_app
 from flask_cors import CORS
 from app.utils.database import get_flask_database_connection
 from app.repositories.search_result_repository import SearchResultRepository
+from app.repositories.search_metadata_repository import SearchMetadataRepository
 
 landing_route = Blueprint('landing_routes', __name__)
 CORS(landing_route)
@@ -17,5 +18,19 @@ def get_random_headlines():
     try:
         headlines = repository.get_queries_and_headlines()
         return jsonify({"headlines": headlines}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@landing_route.route('/api/get-todays-top-search', methods=['GET'])
+def get_todays_top_search_term():
+    connection = get_flask_database_connection(current_app)
+    repository = SearchMetadataRepository(connection)
+
+    try:
+        top_term, count = repository.get_todays_top_search_term()
+        if top_term:
+            return jsonify({"term": top_term, "count": count}), 200
+        else:
+            return jsonify({"message": "No searches today"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
