@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { IoSearchCircle } from "react-icons/io5";
 import GlobeComponent from '../components/Globe/Globe';
 import About from '../components/About/About';
-import Headlines from '../components/HeadlineComponent/HeadlineComponent';
+import Headlines from '../components/LandingComponents/HeadlineComponent';
+import TopSearchTerm from '../components/LandingComponents/TopSearchTerm';
 import './Landing.css';
 
 const LandingPage = () => {
@@ -30,12 +31,15 @@ const LandingPage = () => {
         <div className="middle-row-landing">
           {/* New nested rows inside the middle-row-landing */}
           <div className="row-1-middle">
-           
+           <TopSearchTerm />
           </div>
           <div className="row-2-middle">
-            {/* You can add additional components or content here */}
-            <div>Additional Content for Row 2</div>
-          </div>
+  <div className="column-1">
+    Left Content (COME BACK HERE)
+  </div>
+  <div className="column-2">Right Content</div>
+</div>
+
         </div>
 
         <div className="bottom-row-landing">

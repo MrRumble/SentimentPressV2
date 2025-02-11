@@ -55,10 +55,12 @@ body, html, .homepage {
   padding: 10px;
 }
 
-.row-1-middle, .row-2-middle {
-  flex: 1;
-  padding: 10px;
+.row-2-middle {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal columns */
+  gap: 10px; /* Adjust spacing between columns */
 }
+
 
 .spinning-globe-landing {
   display: flex;
