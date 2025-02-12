@@ -58,7 +58,7 @@ const Homepage = () => {
         <QueryComponent 
           onSearch={handleSearch} 
           query={searchTerm} 
-          errorMessage={errorMessage}  // Passing errorMessage to QueryComponent
+          errorMessage={errorMessage}  
         />
       </div>
     </div>

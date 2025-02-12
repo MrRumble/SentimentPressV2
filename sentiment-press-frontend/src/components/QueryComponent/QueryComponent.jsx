@@ -15,14 +15,17 @@ const QueryComponent = ({ onSearch, query }) => {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [activeSection, setActiveSection] = useState('summary'); // State to control which section is shown
+  const [isLoading, setIsLoading] = useState(false);  // Track loading state
 
   const handleQuerySubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setResult(null);
+    setIsLoading(true);  // Start loading
 
     if (!query.trim()) {
       setError("Query text cannot be empty.");
+      setIsLoading(false);  // Stop loading
       return;
     }
 
@@ -46,6 +49,8 @@ const QueryComponent = ({ onSearch, query }) => {
       }
     } catch (err) {
       setError('Failed to fetch data. Please check your connection.');
+    } finally {
+      setIsLoading(false);  // Stop loading after the request is done
     }
   };
 
@@ -69,7 +74,12 @@ const QueryComponent = ({ onSearch, query }) => {
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
       <SearchBar onSearch={onSearch} searchTerm={query} errorMessage={error} />
 
-      {result && (
+      {isLoading ? (
+        <div style={styles.spinnerContainer}>
+          <div className="spinner"></div>
+          <p>Fetching and analyzing articles for "{query}"... Please wait.</p>
+        </div>
+      ) : result ? (
         <div style={{ marginTop: '20px' }}>
           <div className="results-header">
               Here's the sentiment analysis results for {query} from {new Date(Date.now() - 86400000).toLocaleDateString("en-GB", {
@@ -173,9 +183,22 @@ const QueryComponent = ({ onSearch, query }) => {
             </div>
           </div>
         </div>
-      )}
+      ) : error ? (
+        <div style={{ color: 'red' }}>{error}</div>
+      ) : null}
     </div>
   );
+};
+
+const styles = {
+  spinnerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100vh',
+    textAlign: 'center',
+  },
 };
 
 export default QueryComponent;
