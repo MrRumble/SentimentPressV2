@@ -77,6 +77,9 @@ const SentimentChart = ({ searchTerm }) => {
   const options = {
     responsive: true,
     plugins: {
+      legend: {
+        display: chartData.datasets.length > 0, // Only show legend if there are datasets
+      },
       title: {
         display: true,
         text: "Sentiment Over Time",
@@ -164,74 +167,70 @@ const SentimentChart = ({ searchTerm }) => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        height: isFullScreen ? "100vh" : "95%",
-        width: isFullScreen ? "100vw" : "95%",
-        position: isFullScreen ? "fixed" : "relative",
-        top: isFullScreen ? 0 : "auto",
-        left: isFullScreen ? 0 : "auto",
-        zIndex: isFullScreen ? 1000 : "auto",
-        padding: isFullScreen ? "20px" : "0",
-        backgroundColor: isFullScreen ? "rgba(0, 0, 0, 0.95)": "transparent",
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: isFullScreen ? "0" : "10px",
-
-      }}
-    >
-      
-      {/* Expand Button */}
-      <button
-        onClick={() => setIsFullScreen(true)}
+    chartData.datasets.length > 0 ? (
+      <div
         style={{
-          position: "absolute",
-          top: "10px",
-          right: "10px",
-          background: "transparent",
-          color: "white",
-          border: "none",
-          fontSize: "20px",
-          cursor: "pointer",
-          zIndex: 2000,
+          display: "flex",
+          height: isFullScreen ? "100vh" : "95%",
+          width: isFullScreen ? "100vw" : "95%",
+          position: isFullScreen ? "fixed" : "relative",
+          top: isFullScreen ? 0 : "auto",
+          left: isFullScreen ? 0 : "auto",
+          zIndex: isFullScreen ? 1000 : "auto",
+          padding: isFullScreen ? "20px" : "0",
+          backgroundColor: isFullScreen ? "rgba(0, 0, 0, 0.95)": "transparent",
+          justifyContent: "center",
+          alignItems: "center",
+          borderRadius: isFullScreen ? "0" : "10px",
         }}
       >
-        <FaExpandArrowsAlt />
-        
-      </button>
-
-      {/* Close Button for Full-Screen Mode */}
-      {isFullScreen && (
+        {/* Expand Button */}
         <button
-          onClick={() => setIsFullScreen(false)}
+          onClick={() => setIsFullScreen(true)}
           style={{
             position: "absolute",
             top: "10px",
-            right: "50px",
+            right: "10px",
             background: "transparent",
             color: "white",
             border: "none",
-            fontSize: "30px",
-            padding: "5px",
+            fontSize: "20px",
             cursor: "pointer",
-            zIndex: 2001,
+            zIndex: 2000,
           }}
         >
-          <TiArrowMinimise />
+          <FaExpandArrowsAlt />
+          
         </button>
-      )}
 
-      <div style={{ flex: 1, width: "100%", height: "100%" }}>
-        {chartData.datasets.length > 0 ? (
-          <Line data={chartData} options={options} ref={chartRef} />
-        ) : (
-          <p style={{ color: "white", textAlign: "center" }}>Loading chart...</p>
+        {/* Close Button for Full-Screen Mode */}
+        {isFullScreen && (
+          <button
+            onClick={() => setIsFullScreen(false)}
+            style={{
+              position: "absolute",
+              top: "10px",
+              right: "50px",
+              background: "transparent",
+              color: "white",
+              border: "none",
+              fontSize: "30px",
+              padding: "5px",
+              cursor: "pointer",
+              zIndex: 2001,
+            }}
+          >
+            <TiArrowMinimise />
+          </button>
         )}
-      </div>
 
-    
-    </div>
+        <div style={{ flex: 1, width: "100%", height: "100%" }}>
+          <Line data={chartData} options={options} ref={chartRef} />
+        </div>
+
+      
+      </div>
+    ) : null
   );
 };
 

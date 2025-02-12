@@ -67,11 +67,10 @@ const QueryComponent = ({ onSearch, query }) => {
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-      {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>}
+      <SearchBar onSearch={onSearch} searchTerm={query} errorMessage={error} />
 
       {result && (
         <div style={{ marginTop: '20px' }}>
-            <SearchBar onSearch={onSearch} searchTerm={query} />
           <div className="results-header">
               Here's the sentiment analysis results for {query} from {new Date(Date.now() - 86400000).toLocaleDateString("en-GB", {
                 day: "2-digit",
