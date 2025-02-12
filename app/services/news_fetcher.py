@@ -27,6 +27,7 @@ class NewsFetcher:
         articles = self.newsapi.get_everything(q=query, language=language, page_size=page_size, from_param=from_date,
                                                to=to_date)
         if articles['status'] == 'ok':
+            print("ARTICLES:", articles)
             return articles['articles']
         else:
             raise ValueError("Failed to fetch news articles. Check your api key or try again later.")

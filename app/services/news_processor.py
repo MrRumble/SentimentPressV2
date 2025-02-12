@@ -22,6 +22,9 @@ class NewsProcessor:
 
     def fetch_and_process_query(self, query, page_size):
         articles = self.fetcher.fetch_articles(query, page_size)
+        if not articles:
+            return None
+
         processed_articles = [self.processor.process_article(article) for article in articles if
                               self.processor.process_article(article) is not None]
         titles_and_descriptions = [article['Description'] for article in processed_articles]

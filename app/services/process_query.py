@@ -14,7 +14,8 @@ class QueryProcessor:
         query = query.lower().strip()
         # Fetch and process articles
         df_sorted = self.processor.fetch_and_process_query(query, 100)
-
+        if df_sorted is None or df_sorted.empty:
+            return {"message": f"No articles to process for query: {query}"}, None
         # Calculate sentiment metrics
         mean_sentiment = self.analyser.calculate_average_sentiment(df_sorted)
         positive_count = self.analyser.calculate_positive_sentiment_count(df_sorted)
