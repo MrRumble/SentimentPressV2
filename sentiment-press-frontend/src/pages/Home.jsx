@@ -9,6 +9,7 @@ const Homepage = () => {
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     // Extract search term from URL on initial load
@@ -22,9 +23,12 @@ const Homepage = () => {
   }, [location.search]);
 
   const handleSearch = (term) => {
-    // Only set search term if not the initial URL load
-    if (!isInitialLoad) {
+    // Validate the search term
+    if (term.trim()) {
       setSearchTerm(term);
+      setErrorMessage(''); // Clear any previous errors
+    } else {
+      setErrorMessage('Query cannot be empty!');
     }
     setIsInitialLoad(false);
   };
@@ -54,6 +58,7 @@ const Homepage = () => {
         <QueryComponent 
           onSearch={handleSearch} 
           query={searchTerm} 
+          errorMessage={errorMessage}  // Passing errorMessage to QueryComponent
         />
       </div>
     </div>
