@@ -10,8 +10,7 @@ body, html, .homepage {
   display: grid;
   grid-template-columns: 1fr 1.2fr; /* Two equal columns */
   grid-template-rows: 1fr;        /* Single row with columns taking full height */
-  height: 100vh;                  /* Full height of the viewport */
-  overflow: hidden;               /* Prevents scrolling the entire page */
+  height: 100vh;                  /* Full height of the viewport */               /* Prevents scrolling the entire page */
 }
 
 .left-column-landing {

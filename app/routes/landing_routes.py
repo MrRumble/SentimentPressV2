@@ -34,3 +34,32 @@ def get_todays_top_search_term():
             return jsonify({"message": "No searches today"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@landing_route.route('/api/get-highest-sentiment-today', methods=['GET'])
+def get_highest_sentiment_today():
+    connection = get_flask_database_connection(current_app)
+    repository = SearchResultRepository(connection)
+
+    try:
+        highest_sentiment = repository.get_highest_sentiment_today()
+        if highest_sentiment:
+            return jsonify(highest_sentiment.__dict__), 200
+        else:
+            return jsonify({"message": "No results found for today"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@landing_route.route('/api/get-lowest-sentiment-today', methods=['GET'])
+def get_lowest_sentiment_today():
+    connection = get_flask_database_connection(current_app)
+    repository = SearchResultRepository(connection)
+
+    try:
+        lowest_sentiment = repository.get_lowest_sentiment_today()
+        if lowest_sentiment:
+            return jsonify(lowest_sentiment.__dict__), 200
+        else:
+            return jsonify({"message": "No results found for today"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

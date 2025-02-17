@@ -151,3 +151,71 @@ class SearchResultRepository:
         results = [{"search_term": row["search_term"].capitalize(), "main_headline": row["main_headline"]} for row in rows]
 
         return results
+    
+    def get_highest_sentiment_today(self):
+        """
+        Retrieves the search result with the highest sentiment from today.
+        """
+        today = date.today().strftime('%Y-%m-%d')
+
+        query = """
+            SELECT *
+            FROM search_results
+            WHERE created_at::date = %s
+            ORDER BY mean_sentiment DESC
+            LIMIT 1;
+        """
+
+        rows = self._connection.execute(query, [today])
+
+        if not rows:
+            return None  # Return None if no results found for today
+
+        row = rows[0]
+        return SearchResult(
+            search_result_id=row['search_result_id'],
+            search_term=row['search_term'],
+            mean_sentiment=row['mean_sentiment'],
+            positive_article_count=row['positive_article_count'],
+            negative_article_count=row['negative_article_count'],
+            total_article_count=row['total_article_count'],
+            ratio_positive_vs_negative=row['ratio_positive_vs_negative'],
+            main_headline=row['main_headline'],
+            top_3_articles=row['top_3_articles'],
+            bottom_3_articles=row['bottom_3_articles'],
+            created_at=row['created_at']
+        )
+
+    def get_lowest_sentiment_today(self):
+        """
+        Retrieves the search result with the lowest sentiment from today.
+        """
+        today = date.today().strftime('%Y-%m-%d')
+
+        query = """
+            SELECT *
+            FROM search_results
+            WHERE created_at::date = %s
+            ORDER BY mean_sentiment ASC
+            LIMIT 1;
+        """
+
+        rows = self._connection.execute(query, [today])
+
+        if not rows:
+            return None  # Return None if no results found for today
+
+        row = rows[0]
+        return SearchResult(
+            search_result_id=row['search_result_id'],
+            search_term=row['search_term'],
+            mean_sentiment=row['mean_sentiment'],
+            positive_article_count=row['positive_article_count'],
+            negative_article_count=row['negative_article_count'],
+            total_article_count=row['total_article_count'],
+            ratio_positive_vs_negative=row['ratio_positive_vs_negative'],
+            main_headline=row['main_headline'],
+            top_3_articles=row['top_3_articles'],
+            bottom_3_articles=row['bottom_3_articles'],
+            created_at=row['created_at']
+        )

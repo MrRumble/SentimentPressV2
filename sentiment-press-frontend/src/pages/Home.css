@@ -1,23 +1,24 @@
 /* General Reset */
-body, html, .homepage {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    height: 100%;  /* Ensures the page takes full height of the viewport */
-  }
-  
-  .homepage {
-    display: grid;
-    grid-template-columns: 1fr 1.1fr; /* Two equal columns */
-    grid-template-rows: 1fr;        /* Single row with columns taking full height */
-    height: 100vh;                  /* Full height of the viewport */
-    overflow: hidden;               /* Prevents scrolling the entire page */
-  }
+body, html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  height: 100%;  /* Ensure the page takes full height of the viewport */
+}
+
+/* Homepage container */
+.homepage {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr; /* Two equal columns */
+  grid-template-rows: auto;        /* Allow the rows to adjust based on content */
+  min-height: 100vh;                /* Ensure the homepage takes at least the height of the viewport */
+  overflow-y: hidden;                 /* Allows scrolling only if content exceeds the height */
+}
   
   .left-column {
     display: grid;                  /* Use grid to handle rows inside left column */
-    grid-template-rows: 1fr 9fr;     /* Two rows: top takes less space, bottom takes more space */
-    overflow-y: auto;               /* Allow scrolling in the left column */
+    grid-template-rows: 1fr;     /* Two rows: top takes less space, bottom takes more space */
+    overflow-y: auto;         /* Allow scrolling in the left column */
     padding: 5px;                   /* Optional: Add padding for better content separation */
   }
   
