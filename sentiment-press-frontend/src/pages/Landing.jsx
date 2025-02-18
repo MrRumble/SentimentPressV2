@@ -5,6 +5,7 @@ import GlobeComponent from '../components/Globe/Globe';
 import About from '../components/About/About';
 import Headlines from '../components/LandingComponents/HeadlineComponent';
 import TopSearchTerm from '../components/LandingComponents/TopSearchTerm';
+import SentimentDisplay from '../components/LandingComponents/TopBottomSentimentToday';
 import './Landing.css';
 
 const LandingPage = () => {
@@ -29,16 +30,15 @@ const LandingPage = () => {
         </div>
 
         <div className="middle-row-landing">
-          {/* New nested rows inside the middle-row-landing */}
+    
           <div className="row-1-middle">
-           <TopSearchTerm />
+            <TopSearchTerm />
           </div>
           <div className="row-2-middle">
-  <div className="column-1">
-    Left Content (COME BACK HERE)
-  </div>
-  <div className="column-2">Right Content</div>
-</div>
+          <div className="column-1">
+            <SentimentDisplay/>
+          </div>
+        </div>
 
         </div>
 

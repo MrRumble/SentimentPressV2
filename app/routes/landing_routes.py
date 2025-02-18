@@ -43,7 +43,11 @@ def get_highest_sentiment_today():
     try:
         highest_sentiment = repository.get_highest_sentiment_today()
         if highest_sentiment:
-            return jsonify(highest_sentiment.__dict__), 200
+            return jsonify({
+                "term": highest_sentiment.search_term,
+                "sentiment_score": highest_sentiment.mean_sentiment,
+                "summary": highest_sentiment.main_headline
+            }), 200
         else:
             return jsonify({"message": "No results found for today"}), 200
     except Exception as e:
@@ -58,7 +62,11 @@ def get_lowest_sentiment_today():
     try:
         lowest_sentiment = repository.get_lowest_sentiment_today()
         if lowest_sentiment:
-            return jsonify(lowest_sentiment.__dict__), 200
+            return jsonify({
+                "term": lowest_sentiment.search_term,
+                "sentiment_score": lowest_sentiment.mean_sentiment,
+                "summary": lowest_sentiment.main_headline
+            }), 200
         else:
             return jsonify({"message": "No results found for today"}), 200
     except Exception as e:
