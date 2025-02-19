@@ -41,10 +41,6 @@ const LandingPage = () => {
         </div>
 
         </div>
-
-        <div className="bottom-row-landing">
-        <Headlines />
-        </div>
       </div>
 
       <div className="right-column-landing">
@@ -82,6 +78,9 @@ const LandingPage = () => {
         </div>
         <div className="bottom-row-landing-right">
           <About />
+        </div>
+        <div className="bottom-row-landing-right-2">
+            <Headlines />
         </div>
       </div>
     </div>
