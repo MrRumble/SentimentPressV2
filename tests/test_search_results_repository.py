@@ -98,3 +98,21 @@ def test_query_result_returns_none_if_does_not_exist_for_that_day(db_connection)
     db_connection.seed("tests/seeds/search_results_test_data.sql")
     search_result_repo = SearchResultRepository(db_connection)
     assert search_result_repo.get_query_result_if_it_exists_today('not searched') is None
+
+def test_get_highest_sentiment_today(db_connection):
+    db_connection.seed("tests/seeds/search_results_test_data.sql")
+    search_result_repo = SearchResultRepository(db_connection)
+    highest_sentiment_result = search_result_repo.get_highest_sentiment_today()
+
+    assert highest_sentiment_result is not None
+    assert float(highest_sentiment_result.mean_sentiment) == 0.90
+
+def test_get_lowest_sentiment_today(db_connection):
+    # Seed the database with test data
+    db_connection.seed("tests/seeds/search_results_test_data.sql")
+    
+    search_result_repo = SearchResultRepository(db_connection)
+    lowest_sentiment_result = search_result_repo.get_lowest_sentiment_today()
+    
+    assert lowest_sentiment_result is not None
+    assert float(lowest_sentiment_result.mean_sentiment) == -0.30
