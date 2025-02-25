@@ -8,21 +8,36 @@ class DatabaseConnection:
     TEST_DATABASE_NAME = "sentiment_press_db_test"
     PROD_DATABASE_NAME = "sentiment_press_db_prod"  # AWS RDS connection will be set dynamically
 
-
     def __init__(self, test_mode=False, prod_mode=False):
         self.test_mode = test_mode
         self.prod_mode = prod_mode
+        self.connection = None
 
     # Connect to the correct PostgreSQL database.
     def connect(self):
         try:
-            self.connection = psycopg.connect(
-                f"postgresql://localhost/{self._database_name()}", 
-                row_factory=dict_row
-            )
-        except psycopg.OperationalError:
-            raise Exception(f"Couldn't connect to the database {self._database_name()}! " \
-                             f"Did you create it using `createdb {self._database_name()}`?")
+            # Check if DATABASE_URL environment variable is set (CI environment or deployment)
+            database_url = os.getenv('DATABASE_URL')
+            
+            if database_url:
+                # Use the provided DATABASE_URL
+                self.connection = psycopg.connect(database_url, row_factory=dict_row)
+            else:
+                # Get database credentials from environment variables or use defaults
+                db_user = os.getenv('POSTGRES_USER', 'postgres')
+                db_password = os.getenv('POSTGRES_PASSWORD', '')
+                db_host = os.getenv('POSTGRES_HOST', 'localhost')
+                
+                # Create connection string with credentials if provided
+                if db_password:
+                    connection_string = f"postgresql://{db_user}:{db_password}@{db_host}/{self._database_name()}"
+                else:
+                    connection_string = f"postgresql://{db_user}@{db_host}/{self._database_name()}"
+                
+                self.connection = psycopg.connect(connection_string, row_factory=dict_row)
+                
+        except psycopg.OperationalError as e:
+            raise Exception(f"Couldn't connect to the database {self._database_name()}! Error: {str(e)}")
     
     def seed(self, sql_filename):
         self._check_connection()
