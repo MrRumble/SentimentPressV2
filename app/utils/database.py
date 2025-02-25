@@ -2,6 +2,10 @@ import os
 import psycopg
 from flask import g
 from psycopg.rows import dict_row
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 class DatabaseConnection:
     DEV_DATABASE_NAME = "sentiment_press_db_dev"
