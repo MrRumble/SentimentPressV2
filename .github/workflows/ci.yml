@@ -3,14 +3,29 @@ name: CI for Flask Backend
 on:
   push:
     branches:
-      - dev  # Trigger CI on pushes to dev branch (you can add other branches like main if you prefer)
+      - dev
   pull_request:
     branches:
-      - dev  # Trigger CI on pull requests targeting dev branch
+      - dev
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: sentiment_press_db_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-timeout=30s
+          --health-start-period=5s
+          --health-retries=5
     
     steps:
     - name: Check out code
@@ -19,13 +34,20 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11.2'  # specify your Python version here
+        python-version: '3.11.2'
+    
+    - name: Create virtual environment
+      run: |
+        python -m venv venv
+        source venv/bin/activate  
     
     - name: Install dependencies
       run: |
+        source venv/bin/activate
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     
     - name: Run tests
-      run: python -m pytest  # match this with how you run tests locally
-
+      run: |
+        source venv/bin/activate
+        python -m pytest
