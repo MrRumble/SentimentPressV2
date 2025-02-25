@@ -27,11 +27,6 @@ jobs:
         with:
           python-version: '3.11.2'
 
-      - name: Set up PostgreSQL
-        uses: harmon758/postgresql-action@v2
-        with:
-          postgresql-version: '14'
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
