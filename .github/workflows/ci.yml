@@ -32,10 +32,5 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run database migrations
-        run: |
-          source venv/bin/activate
-          flask db upgrade
-
       - name: Run tests
         run: python -m pytest
