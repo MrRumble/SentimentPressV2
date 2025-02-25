@@ -3,13 +3,10 @@ from app.models.search_result_model import SearchResult
 
 
 def test_create(db_connection):
-    # Seed database with test data
     db_connection.seed("tests/seeds/search_results_test_data.sql")
 
-    # Instantiate the repository for SearchResults
     search_result_repo = SearchResultRepository(db_connection)
 
-    # Create a new SearchResult object
     new_search_result = SearchResult(
         search_term='New Search Term',
         mean_sentiment=0.75,
@@ -30,13 +27,10 @@ def test_create(db_connection):
         ],
     )
 
-    # Insert the new search result into the database
     search_result_repo.create(new_search_result)
 
-    # Fetch the inserted search result (assuming it was assigned ID 1)
     found_search_result = search_result_repo.find(4)
-    print(found_search_result)
-    # Assertions to check if the inserted and fetched records match
+
     assert found_search_result.search_result_id == 4
     assert found_search_result.search_term == 'New Search Term'
     assert found_search_result.mean_sentiment == 0.75
@@ -58,16 +52,13 @@ def test_create(db_connection):
 
 
 def test_find(db_connection):
-    # Seed the database with test data
+
     db_connection.seed("tests/seeds/search_results_test_data.sql")
 
-    # Instantiate the repository for SearchResults
     search_result_repo = SearchResultRepository(db_connection)
 
-    # Fetch a SearchResult using the find method (ID 1 is inserted as part of test data)
     search_result = search_result_repo.find(1)
 
-    # Assertions to validate correct data retrieval
     assert search_result.search_result_id == 1
     assert search_result.search_term == 'test search term 1'
     assert float(search_result.mean_sentiment) == 0.7
@@ -89,7 +80,7 @@ def test_find(db_connection):
 
 
 def test_query_result_returns_if_exists_for_that_day(db_connection):
-    # Seed the database with test data
+
     db_connection.seed("tests/seeds/search_results_test_data.sql")
     search_result_repo = SearchResultRepository(db_connection)
     assert search_result_repo.get_query_result_if_it_exists_today('test search term 1') is not None
@@ -108,7 +99,6 @@ def test_get_highest_sentiment_today(db_connection):
     assert float(highest_sentiment_result.mean_sentiment) == 0.90
 
 def test_get_lowest_sentiment_today(db_connection):
-    # Seed the database with test data
     db_connection.seed("tests/seeds/search_results_test_data.sql")
     
     search_result_repo = SearchResultRepository(db_connection)
