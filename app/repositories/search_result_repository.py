@@ -125,7 +125,6 @@ class SearchResultRepository:
         If no articles exist for a category, they are omitted.
         """
         today = date.today().strftime('%Y-%m-%d')
-        print(today)
 
         news_categories = [
             "world", "politics", "business", "science", "health", "sports",

@@ -22,8 +22,8 @@ class QueryProcessor:
         negative_count = self.analyser.calculate_negative_sentiment_count(df_sorted)
         ratio = self.analyser.calculate_sentiment_ratio(positive_count, negative_count)
 
-        # Summarize top and bottom articles
-        df_summarised = self.processor.summarise_top_bottom_articles(df_sorted)
+        # Summarize top and bottom articles !!!
+        df_summarised = self.summariser.summarise_headlines(df_sorted)
 
         top3 = self.processor.top_three_articles(df_sorted)
         bottom3 = self.processor.bottom_three_articles(df_sorted)

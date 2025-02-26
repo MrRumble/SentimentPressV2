@@ -60,6 +60,3 @@ class NewsProcessor:
         ]
         return articles
 
-    # CHECK IF THIS IS NEEDED
-    def summarise_top_bottom_articles(self, df, top_n=3, bottom_n=3, max_summary_sentences=6):
-        return self.summarizer.summarise_top_bottom_articles(df, top_n, bottom_n, max_summary_sentences)

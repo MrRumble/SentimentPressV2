@@ -10,10 +10,10 @@ populate_route = Blueprint('populate_route', __name__)
 CORS(populate_route)
 
 news_categories = [
-    "World", "Politics", "Business", "Science", "Health", "Sports",
+    "Politics", "Business", "Science", "Sports",
     "Entertainment", "Education", "Environment", "UK", 
-    "Finance", "Music", "Movies", "Television",
-    'technology', "stock market", "Cryptocurrency", "Weather", "Crime", "Starmer",
+    "Finance", "Music", "Movies",
+    'technology', "stock market", "Weather", "Crime", "Starmer",
     "war", "Trump", "AI", "Rugby", 'Gaza', 'Israel', 'Russia', 'Ukraine'
     ]
 
