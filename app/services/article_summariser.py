@@ -1,25 +1,43 @@
-from transformers import pipeline
-
-import os
+import requests
 from dotenv import load_dotenv
-
+import os
 
 class ArticleSummariser:
     def __init__(self):
         load_dotenv()
-        self.text_generation_pipeline = pipeline('summarization', model="sshleifer/distilbart-cnn-12-6") # Investigate models
-        self.api_key = os.getenv("OPEN_AI_KEY")
+        self.api_url = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
+        self.api_key = os.getenv("HUGGINGFACE_API_KEY")
 
-    def summarise_top_bottom_articles(self, df, top_n=3, bottom_n=3, max_summary_sentences=6) -> str:
-        top_articles = df.nlargest(top_n, 'Sentiment Score')
-        bottom_articles = df.nsmallest(bottom_n, 'Sentiment Score')
-        combined_text = '. '.join(top_articles['Title'] + '. ' + top_articles['Description']) + '. ' + \
-                        '. '.join(bottom_articles['Title'] + '. ' + bottom_articles['Description'])
-        summary = self.text_generation_pipeline(combined_text, max_length=200, min_length=30, num_return_sequences=1,
-                                                early_stopping=True)
-        summarized_text = summary[0]['summary_text']
-        summarized_sentences = summarized_text.split('. ')
-        if len(summarized_sentences) > max_summary_sentences:
-            summarized_text = '. '.join(summarized_sentences[:max_summary_sentences]) + '.'
-        return summarized_text
+    def send_to_huggingface(self, combined_text: str, max_length: int = 150, min_length: int = 50) -> str:
+        headers = {"Authorization": f"Bearer {self.api_key}"}
+        payload = {
+            "inputs": combined_text,
+            "parameters": {
+                "max_length": max_length,
+                "min_length": min_length
+            }
+        }
+        response = requests.post(self.api_url, headers=headers, json=payload)
+
+        if response.status_code == 200:
+            summary = response.json()
+            return summary[0]['summary_text']
+        else:
+            return f"Error: {response.status_code}, {response.text}"
+
+    def summarise_headlines(self, df) -> str:
+        combined_text = '. '.join(df['Title']) + '.'
+        max_length = 1024  # Adjust based on the model's token limit
+        chunks = [combined_text[i:i + max_length] for i in range(0, len(combined_text), max_length)]
+
+        # Summarize each chunk with reduced length
+        summaries = [self.send_to_huggingface(chunk, max_length=100, min_length=30) for chunk in chunks]
+
+        # Combine the individual summaries
+        combined_summary = ' '.join(summaries)
+
+        # Further condense the final summary
+        final_summary = self.send_to_huggingface(combined_summary, max_length=150, min_length=30)
+
+        return final_summary
 
