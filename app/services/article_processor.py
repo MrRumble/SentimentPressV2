@@ -13,8 +13,15 @@ Finally, articles are transformed into a delicious dictionary format, ready for 
 
 # TESTED
 class ArticleProcessor:
+    _model = None  # Class variable to store the model
+
     def __init__(self):
-        self.sentiment_pipeline = pipeline('sentiment-analysis')
+        if ArticleProcessor._model is None:
+            ArticleProcessor._model = pipeline(
+                "sentiment-analysis", 
+                model="distilbert-base-uncased-finetuned-sst-2-english"
+            )
+        self.sentiment_pipeline = ArticleProcessor._model
 
     def extract_article_info(self, article):
         title = article['title']

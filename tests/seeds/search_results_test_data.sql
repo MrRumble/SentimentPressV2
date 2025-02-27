@@ -10,7 +10,7 @@ CREATE TABLE search_results (
     negative_article_count INT,
     total_article_count INT,
     ratio_positive_vs_negative DECIMAL(5, 2),
-    main_headline VARCHAR(2000),
+    main_headline VARCHAR(4000),
     top_3_articles JSONB,
     bottom_3_articles JSONB,
     created_at TIMESTAMP DEFAULT NOW() -- New single timestamp column
