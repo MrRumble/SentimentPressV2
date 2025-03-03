@@ -19,25 +19,33 @@ class ArticleSummariser:
         }
         response = requests.post(self.api_url, headers=headers, json=payload)
 
-        if response.status_code == 200:
-            summary = response.json()
-            return summary[0]['summary_text']
+        try:
+            response_json = response.json()
+        except ValueError:
+            return f"API Error: Unable to parse response (status {response.status_code})"
+
+        if response.status_code == 200 and isinstance(response_json, list) and 'summary_text' in response_json[0]:
+            return response_json[0]['summary_text']
         else:
-            return f"Error: {response.status_code}, {response.text}"
+            return f"API Error: {response.status_code}, {response.text}"
 
     def summarise_headlines(self, df) -> str:
         combined_text = '. '.join(df['Title']) + '.'
-        max_length = 1024  # Adjust based on the model's token limit
+        max_length = 1024 
         chunks = [combined_text[i:i + max_length] for i in range(0, len(combined_text), max_length)]
 
-        # Summarize each chunk with reduced length
-        summaries = [self.send_to_huggingface(chunk, max_length=100, min_length=30) for chunk in chunks]
+        summaries = []
+        for chunk in chunks:
+            result = self.send_to_huggingface(chunk, max_length=100, min_length=30)
+            if result.startswith("API Error"): 
+                print(f"Error summarizing chunk: {result}") 
+            else:
+                summaries.append(result)
 
-        # Combine the individual summaries
         combined_summary = ' '.join(summaries)
 
-        # Further condense the final summary
-        final_summary = self.send_to_huggingface(combined_summary, max_length=150, min_length=30)
-
-        return final_summary
-
+        if combined_summary:
+            final_summary = self.send_to_huggingface(combined_summary, max_length=150, min_length=30)
+            return final_summary if not final_summary.startswith("API Error") else "Error: Final summarization failed."
+        else:
+            return "Error: Unable to summarize due to API failure."
