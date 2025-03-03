@@ -3,6 +3,9 @@ from app.models.search_result_model import SearchResult
 from app.services.sentiment_analyser import SentimentAnalyser
 from app.services.news_processor import NewsProcessor
 from app.services.article_summariser import ArticleSummariser
+"""
+ONLY CACHE IF SUCCESFUL RETURN FROM HUGGING FACE
+"""
 
 class QueryProcessor:
     def __init__(self):
