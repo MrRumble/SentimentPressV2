@@ -15,6 +15,8 @@ import "chartjs-adapter-luxon";
 import ChartAnnotation from "chartjs-plugin-annotation";
 import { FaExpandArrowsAlt } from "react-icons/fa";
 import { TiArrowMinimise } from "react-icons/ti";
+import { GrClear } from "react-icons/gr";
+
 
 import { useRefresh } from "../../pages/RefreshContext";
 
@@ -81,8 +83,9 @@ const SentimentChart = ({ searchTerm }) => {
   
 
   const clearChart = () => {
-    setChartData({ datasets: [] });
+    setChartData({ datasets: [{ label: "", data: [], borderColor: "transparent", fill: false }] });
   };
+  
 
   const getRandomColor = () => {
     const letters = "456789ABCDEF";
@@ -197,7 +200,7 @@ const SentimentChart = ({ searchTerm }) => {
           left: isFullScreen ? 0 : "auto",
           zIndex: isFullScreen ? 1000 : "auto",
           padding: isFullScreen ? "20px" : "0",
-          backgroundColor: isFullScreen ? "rgba(0, 0, 0, 0.95)": "transparent",
+          backgroundColor: isFullScreen ? "rgba(0, 0, 0, 0.95)" : "transparent",
           justifyContent: "center",
           alignItems: "center",
           borderRadius: isFullScreen ? "0" : "10px",
@@ -218,9 +221,8 @@ const SentimentChart = ({ searchTerm }) => {
           }}
         >
           <FaExpandArrowsAlt />
-          
         </button>
-
+  
         {isFullScreen && (
           <button
             onClick={() => setIsFullScreen(false)}
@@ -240,15 +242,31 @@ const SentimentChart = ({ searchTerm }) => {
             <TiArrowMinimise />
           </button>
         )}
-
+  
+        <button
+          onClick={clearChart}
+          style={{
+            position: "absolute",
+            top: "10px",
+            left: "10px",
+            background: "transparent",
+            color: "white",
+            border: "none",
+            fontSize: "20px",
+            cursor: "pointer",
+            zIndex: 2000,
+          }}
+        >
+          <GrClear />
+        </button>
+  
         <div style={{ flex: 1, width: "100%", height: "100%" }}>
           <Line data={chartData} options={options} ref={chartRef} />
         </div>
-
-      
       </div>
     ) : null
   );
+  
 };
 
 export default SentimentChart;
