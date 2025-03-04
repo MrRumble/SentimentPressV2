@@ -2,27 +2,39 @@ import { useRef } from 'react';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { Sphere } from '@react-three/drei';
 import * as THREE from 'three';
-import earthTexture from './globeTexture.png'; // Ensure this path is correct
+import earthTexture from './globeTexture.png';
+import { useNavigate } from 'react-router-dom';
 
 const Globe = ({ position = [0, 0, 0], scale = [2, 2, 2] }) => {
   const globeRef = useRef();
   const texture = useLoader(THREE.TextureLoader, earthTexture);
+  const navigate = useNavigate();
 
   useFrame(() => {
     if (globeRef.current) {
-      globeRef.current.rotation.y += 0.003; // Adjust rotation speed if needed
+      globeRef.current.rotation.y += 0.003;
     }
   });
 
+  const handleClick = () => {
+    navigate('/'); 
+  };
+
   return (
-    <Sphere ref={globeRef} args={[1, 32, 32]} position={position} scale={scale}>
+    <Sphere
+      ref={globeRef}
+      args={[1, 32, 32]}
+      position={position}
+      scale={scale}
+      onClick={handleClick}
+      style={{ cursor: 'pointer' }} 
+    >
       <meshStandardMaterial map={texture} />
     </Sphere>
   );
 };
 
 const GlobeComponent = ({ position, scale, lightSettings = {}, style = {}, canvasProps = {} }) => {
-  // Default light settings
   const defaultLightSettings = {
     ambientLightIntensity: 1.2,
     directionalLightPosition: [1, 5, 5],

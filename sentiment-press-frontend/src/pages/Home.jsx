@@ -51,9 +51,7 @@ const Homepage = () => {
           <SentimentChart searchTerm={searchTerm} />
         </div>
         <div className="third-row">
-          <a href="#about">About Sentiment Press</a>
-          <a href="#contact">Contact</a>
-          <a href="#privacy">Privacy Policy</a>
+
         </div>
       </div>
 

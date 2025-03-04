@@ -13,26 +13,21 @@ CORS(sentiment_route)
 
 @sentiment_route.route('/api/get_sentiment', methods=['GET'])
 def get_sentiment():
-    # Fetch a single search term from query parameters
     search_term = request.args.get('search_term').lower()
     if not search_term:
         return jsonify({"error": "search_term is required"}), 400
 
-    # Initialize database connection and repository
     connection = get_flask_database_connection(current_app)
     search_result_repository = SearchResultRepository(connection)
 
     # Call the repository method to retrieve the data for the past 30 days
     try:
-        # Fetch the data from the database for the given search term
         results = search_result_repository.get_sentiment_over_time(search_term)
 
-        # Organize the data in a way that can be used for plotting
         organized_data = defaultdict(list)
 
-        # Iterate through the data and organize it by date and summary
         for row in results:
-            mean_sentiment = float(row['mean_sentiment'])  # Convert Decimal to float
+            mean_sentiment = float(row['mean_sentiment']) 
             date = row['date'].strftime('%Y-%m-%d')
             summary = row['main_headline']
             organized_data[date].append({
@@ -48,8 +43,8 @@ def get_sentiment():
                     "data": [
                         {"x": date, "y": organized_data[date][0]['sentiment'], "summary": organized_data[date][0]['summary']}
                         for date in sorted(organized_data.keys())
-                    ],  # Function for a random color for the line
-                    "fill": False  # Line graph without filling the area beneath
+                    ],  
+                    "fill": False  
                 }
             ]
         }

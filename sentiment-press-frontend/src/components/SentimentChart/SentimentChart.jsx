@@ -15,6 +15,8 @@ import "chartjs-adapter-luxon";
 import ChartAnnotation from "chartjs-plugin-annotation";
 import { FaExpandArrowsAlt } from "react-icons/fa";
 import { TiArrowMinimise } from "react-icons/ti";
+import { GrClear } from "react-icons/gr";
+
 
 import { useRefresh } from "../../pages/RefreshContext";
 
@@ -52,8 +54,24 @@ const SentimentChart = ({ searchTerm }) => {
           pointRadius: 4,
         };
   
-        // Replace dataset instead of appending
-        setChartData({ datasets: [newDataset] });
+        setChartData((prevChartData) => {
+          const existingDatasetIndex = prevChartData.datasets.findIndex(
+            (dataset) => dataset.label === searchTerm
+          );
+  
+          if (existingDatasetIndex !== -1) {
+            const updatedDatasets = [...prevChartData.datasets];
+            updatedDatasets[existingDatasetIndex] = {
+              ...updatedDatasets[existingDatasetIndex],
+              data: newDataset.data,
+            };
+            return { datasets: updatedDatasets };
+          } else {
+            return {
+              datasets: [...prevChartData.datasets, newDataset],
+            };
+          }
+        });
       } catch (error) {
         console.error("Error fetching sentiment data:", error);
       }
@@ -62,10 +80,12 @@ const SentimentChart = ({ searchTerm }) => {
     fetchData();
   }, [searchTerm, refreshKey]);
   
+  
 
   const clearChart = () => {
-    setChartData({ datasets: [] });
+    setChartData({ datasets: [{ label: "", data: [], borderColor: "transparent", fill: false }] });
   };
+  
 
   const getRandomColor = () => {
     const letters = "456789ABCDEF";
@@ -80,21 +100,23 @@ const SentimentChart = ({ searchTerm }) => {
     responsive: true,
     plugins: {
       legend: {
-        display: chartData.datasets.length > 0, // Only show legend if there are datasets
+        display: chartData.datasets.length > 0,
       },
       title: {
         display: true,
-        text: "Sentiment Over Time",
+        text: "Mean Sentiment Over Time",
         color: "white",
       },
       tooltip: {
-        backgroundColor: "rgba(0, 0, 0, 0.2)",
-        cornerRadius: 4,
+        backgroundColor: "rgba(0, 0, 0, 0.58)",
+        borderColor: "rgb(198, 0, 205)",
+        borderWidth: 1,
+        cornerRadius: 8,
         displayColors: false,
         position: "nearest",
-        caretPadding: 30, // Padding between the tooltip pointer and the tooltip body
-        xAlign: "center",  // Horizontally center the tooltip relative to the point
-        yAlign: "bottom", 
+        caretPadding: 30,
+        xAlign: "center",
+        yAlign: "bottom",
         callbacks: {
           title: () => "",
           label: (tooltipItem) => {
@@ -105,11 +127,14 @@ const SentimentChart = ({ searchTerm }) => {
               month: "short",
               day: "numeric",
             }).format(point.x);
-
+      
+            const summaryLines = point.summary.match(/.{1,50}(\s|$)/g) || [point.summary];
+      
             return [
               `Date: ${formattedDate}`,
               `Sentiment: ${point.y}`,
-              `Summary: ${point.summary}`,
+              `Summary:`,
+              ...summaryLines,
             ];
           },
         },
@@ -180,13 +205,12 @@ const SentimentChart = ({ searchTerm }) => {
           left: isFullScreen ? 0 : "auto",
           zIndex: isFullScreen ? 1000 : "auto",
           padding: isFullScreen ? "20px" : "0",
-          backgroundColor: isFullScreen ? "rgba(0, 0, 0, 0.95)": "transparent",
+          backgroundColor: isFullScreen ? "rgba(0, 0, 0, 0.95)" : "transparent",
           justifyContent: "center",
           alignItems: "center",
           borderRadius: isFullScreen ? "0" : "10px",
         }}
       >
-        {/* Expand Button */}
         <button
           onClick={() => setIsFullScreen(true)}
           style={{
@@ -202,10 +226,8 @@ const SentimentChart = ({ searchTerm }) => {
           }}
         >
           <FaExpandArrowsAlt />
-          
         </button>
-
-        {/* Close Button for Full-Screen Mode */}
+  
         {isFullScreen && (
           <button
             onClick={() => setIsFullScreen(false)}
@@ -225,15 +247,31 @@ const SentimentChart = ({ searchTerm }) => {
             <TiArrowMinimise />
           </button>
         )}
-
+  
+        <button
+          onClick={clearChart}
+          style={{
+            position: "absolute",
+            top: "10px",
+            left: "10px",
+            background: "transparent",
+            color: "purple",
+            border: "none",
+            fontSize: "20px",
+            cursor: "pointer",
+            zIndex: 2000,
+          }}
+        >
+          <GrClear />
+        </button>
+  
         <div style={{ flex: 1, width: "100%", height: "100%" }}>
           <Line data={chartData} options={options} ref={chartRef} />
         </div>
-
-      
       </div>
     ) : null
   );
+  
 };
 
 export default SentimentChart;

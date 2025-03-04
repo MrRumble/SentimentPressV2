@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoSearchCircle } from "react-icons/io5";
+import { FaChevronDown } from "react-icons/fa";
 import GlobeComponent from '../components/Globe/Globe';
 import About from '../components/About/About';
 import Headlines from '../components/LandingComponents/HeadlineComponent';
@@ -10,13 +11,29 @@ import './Landing.css';
 
 const LandingPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
+
+  const predefinedTerms = [
+    "Trump", "Politics", "Business", "Science", "Sports",
+    "Entertainment", "Education", "Environment", "UK", 
+    "Finance", "Music", "Movies",
+    'Technology', "Stock Market", "Weather", "Crime", "Starmer",
+    "War", "AI", "Rugby", 'Gaza', 'Israel', 'Russia', 'Ukraine'
+  ];
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       navigate(`/home?search=${encodeURIComponent(searchTerm)}`);
+      setIsDropdownOpen(false);
     }
+  };
+
+  const handleTermSelect = (term) => {
+    setSearchTerm(term);
+    setIsDropdownOpen(false);
+    navigate(`/home?search=${encodeURIComponent(term)}`);
   };
 
   return (
@@ -45,36 +62,101 @@ const LandingPage = () => {
 
       <div className="right-column-landing">
         <div className="top-row-landing-right">
-          <h1>Search for Sentiment Analysis</h1>
-          <form onSubmit={handleSearch} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Enter your query"
-              style={{
+          <div style={{ position: 'relative', width: '100%' }}>
+            <form onSubmit={handleSearch} style={{ 
+              marginBottom: '10px', 
+              display: 'flex', 
+              alignItems: 'center',
+              position: 'relative'
+            }}>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setIsDropdownOpen(false);
+                }}
+                placeholder="Enter your query, or select the dropdown for our top picks.."
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  fontSize: '16px',
+                  boxSizing: 'border-box',
+                  paddingRight: '50px',
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                style={{
+                  position: 'absolute',
+                  right: '60px',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  height: '100%',
+                }}
+              >
+                <FaChevronDown style={{ color: '#920089' }} />
+              </button>
+              <button
+                type="submit"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginLeft: '4px',
+                }}
+              >
+                <IoSearchCircle style={{ fontSize: '50px', color: '#920089' }} />
+              </button>
+            </form>
+
+            {/* Dropdown for predefined terms */}
+            {isDropdownOpen && (
+              <div style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
                 width: '100%',
-                padding: '10px',
-                fontSize: '16px',
-                boxSizing: 'border-box',
-              }}
-            />
-            <button
-              type="submit"
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '16px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginLeft: '4px',
-              }}
-            >
-              <IoSearchCircle style={{ fontSize: '50px', color: '#920089' }} />
-            </button>
-          </form>
+                maxHeight: '300px',
+                overflowY: 'auto',
+                backgroundColor: 'white',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                zIndex: 10,
+              }}>
+                {predefinedTerms.map((term, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleTermSelect(term)}
+                    style={{
+                      padding: '10px',
+                      cursor: 'pointer',
+                      color: 'black',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = '#f0f0f0';
+                      e.target.style.color = 'black';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = 'white';
+                      e.target.style.color = 'black';
+                    }}
+                  >
+                    {term}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
         <div className="bottom-row-landing-right">
           <About />

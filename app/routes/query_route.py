@@ -21,11 +21,9 @@ def query():
     if not query_text:
         return jsonify({"error": "Query text cannot be empty"}), 400
 
-    # Save search metadata for the query
     meta_data = SearchMetadata(user_id=None, search_term=query_text)
     search_metadata_repository.create(meta_data)
 
-    # Check if a result for the query exists today
     existing_result = search_result_repository.get_query_result_if_it_exists_today(query_text)
     if existing_result:
         response_data_front_end = {
@@ -42,11 +40,9 @@ def query():
         print("Existing result found for query:", query_text)
         return jsonify(response_data_front_end), 200
 
-    # Process the query and generate a summary
     response_data_front_end, search_result = processor.process_query(query_text)
 
-    # 🔥 Prevent saving if summarization failed
-    if search_result is None or "API Error" in response_data_front_end.get("query_info", {}).get("summary", ""):
+    if search_result is None or "Error:" in response_data_front_end.get("query_info", {}).get("summary", ""):
         return jsonify({"error": "Summarization failed, result not saved"}), 500
 
     # Save the new search result to the database
