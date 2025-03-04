@@ -32,12 +32,15 @@ const TopSearchTerm = () => {
   }, []); // Empty dependency array ensures this runs only once on mount
 
   return (
-    <div className="top-search-container">
-      <h3>Today's Top Search:</h3>
-      <p>
-        <i>{topSearch.term}</i> - <strong>{topSearch.count} searches</strong>
-      </p>
-    </div>
+<div className="top-search-container">
+  <h3 style={{ display: "inline", marginRight: "10px" }}>Today's Top Search:</h3>
+  <span style={{ fontSize: "24px", fontWeight: "bold", marginRight: "10px", color: "purple" }}>
+    <i>{topSearch.term.charAt(0).toUpperCase() + topSearch.term.slice(1)}</i>
+  </span>
+  <span style={{ fontSize: "18px" }}>
+    - <strong>{topSearch.count} searches</strong>
+  </span>
+</div>
   );
 };
 
