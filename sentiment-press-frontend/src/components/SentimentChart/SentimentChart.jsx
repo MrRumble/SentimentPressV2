@@ -104,17 +104,19 @@ const SentimentChart = ({ searchTerm }) => {
       },
       title: {
         display: true,
-        text: "Sentiment Over Time",
+        text: "Mean Sentiment Over Time",
         color: "white",
       },
       tooltip: {
-        backgroundColor: "rgba(0, 0, 0, 0.2)",
-        cornerRadius: 4,
+        backgroundColor: "rgba(0, 0, 0, 0.58)",
+        borderColor: "rgb(198, 0, 205)",
+        borderWidth: 1,
+        cornerRadius: 8,
         displayColors: false,
         position: "nearest",
         caretPadding: 30,
-        xAlign: "center",  
-        yAlign: "bottom", 
+        xAlign: "center",
+        yAlign: "bottom",
         callbacks: {
           title: () => "",
           label: (tooltipItem) => {
@@ -125,11 +127,14 @@ const SentimentChart = ({ searchTerm }) => {
               month: "short",
               day: "numeric",
             }).format(point.x);
-
+      
+            const summaryLines = point.summary.match(/.{1,50}(\s|$)/g) || [point.summary];
+      
             return [
               `Date: ${formattedDate}`,
               `Sentiment: ${point.y}`,
-              `Summary:\n${point.summary}` 
+              `Summary:`,
+              ...summaryLines,
             ];
           },
         },
