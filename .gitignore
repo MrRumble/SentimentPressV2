@@ -88,3 +88,9 @@ celerybeat.pid
 config.py
 secrets.py
 local_settings.py
+
+# Terraform files
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
