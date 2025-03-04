@@ -250,7 +250,7 @@ const SentimentChart = ({ searchTerm }) => {
             top: "10px",
             left: "10px",
             background: "transparent",
-            color: "white",
+            color: "purple",
             border: "none",
             fontSize: "20px",
             cursor: "pointer",
