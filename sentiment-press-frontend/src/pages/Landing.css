@@ -48,27 +48,24 @@ body, html, .homepage {
   padding: 10px;
 }
 
-
-
-
 .spinning-globe-landing {
   display: flex;
-  justify-content: center;         /* Center horizontally */
-  align-items: center;             /* Center vertically */
-  height: 200px;                   /* Fixed height */
-  width: 200px;                    /* Fixed width */
-  border-radius: 10px;             /* Optional: Rounded corners */
-  overflow: hidden;                /* Optional: Clip overflow */
+  justify-content: center;         
+  align-items: center;             
+  height: 200px;                   
+  width: 200px;                    
+  border-radius: 10px;             
+  overflow: hidden;                
 }
 
 .website-name-landing {
   font-size: 3rem;
   font-weight: bold;
-  color: #ffffff;  /* You can change this to your preferred color */
+  color: #ffffff;  
   text-align: left;
 }
 
 .headline-container {
   width: 100%;
-  margin-top: 20px; /* Space for the headlines */
+
 }

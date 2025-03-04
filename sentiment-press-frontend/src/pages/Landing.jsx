@@ -62,7 +62,6 @@ const LandingPage = () => {
 
       <div className="right-column-landing">
         <div className="top-row-landing-right">
-          <h1>Search for Sentiment Analysis</h1>
           <div style={{ position: 'relative', width: '100%' }}>
             <form onSubmit={handleSearch} style={{ 
               marginBottom: '10px', 

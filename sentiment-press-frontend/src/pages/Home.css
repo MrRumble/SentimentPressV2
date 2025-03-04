@@ -69,7 +69,7 @@ body, html {
     justify-content: center;         /* Center the links horizontally */
     align-items: center;             /* Center the links vertically */
     height: 100%;                    /* Take full height of the new row */
-    gap: 20px;                       /* Space between the links */
+    gap: 20px;                       
   }
   
   .third-row a {

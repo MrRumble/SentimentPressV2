@@ -129,7 +129,7 @@ const SentimentChart = ({ searchTerm }) => {
             return [
               `Date: ${formattedDate}`,
               `Sentiment: ${point.y}`,
-              `Summary: ${point.summary}`,
+              `Summary:\n${point.summary}` 
             ];
           },
         },
