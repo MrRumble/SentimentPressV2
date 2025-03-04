@@ -11,11 +11,15 @@ import { IoIosSad } from "react-icons/io";
 import Speedometer from '../Speedometer/Speedometer';
 import SearchBar from '../../pages/Search';
 
+import { useRefresh } from "../../pages/RefreshContext";
+
 const QueryComponent = ({ onSearch, query }) => {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [activeSection, setActiveSection] = useState('summary'); // State to control which section is shown
   const [isLoading, setIsLoading] = useState(false);  // Track loading state
+
+  const { triggerRefresh } = useRefresh(); 
 
   const handleQuerySubmit = async (e) => {
     e.preventDefault();
@@ -43,6 +47,9 @@ const QueryComponent = ({ onSearch, query }) => {
         const data = await response.json();
         setResult(data);
         onSearch(query);
+
+        triggerRefresh();
+
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Something went wrong. Please try again.');

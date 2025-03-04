@@ -16,6 +16,8 @@ import ChartAnnotation from "chartjs-plugin-annotation";
 import { FaExpandArrowsAlt } from "react-icons/fa";
 import { TiArrowMinimise } from "react-icons/ti";
 
+import { useRefresh } from "../../pages/RefreshContext";
+
 
 ChartJS.register(ChartAnnotation, Title, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, TimeScale);
 ChartJS.defaults.plugins.legend.labels.color = "white";
@@ -26,16 +28,17 @@ const SentimentChart = ({ searchTerm }) => {
   const [chartData, setChartData] = useState({ datasets: [] });
   const [isFullScreen, setIsFullScreen] = useState(false);
   const chartRef = useRef(null);
+  const { refreshKey } = useRefresh();
 
   useEffect(() => {
     if (!searchTerm) return;
-
+  
     const fetchData = async () => {
       try {
         const baseURL = process.env.REACT_APP_API_BASE_URL;
         const response = await fetch(`${baseURL}/api/get_sentiment?search_term=${searchTerm}`);
         const data = await response.json();
-
+  
         const newDataset = {
           label: searchTerm,
           data: data.datasets[0].data.map((item) => ({
@@ -48,18 +51,17 @@ const SentimentChart = ({ searchTerm }) => {
           tension: 0.4,
           pointRadius: 4,
         };
-
-        setChartData((prevData) => ({
-          ...prevData,
-          datasets: [...prevData.datasets, newDataset],
-        }));
+  
+        // Replace dataset instead of appending
+        setChartData({ datasets: [newDataset] });
       } catch (error) {
         console.error("Error fetching sentiment data:", error);
       }
     };
-
+  
     fetchData();
-  }, [searchTerm]);
+  }, [searchTerm, refreshKey]);
+  
 
   const clearChart = () => {
     setChartData({ datasets: [] });
