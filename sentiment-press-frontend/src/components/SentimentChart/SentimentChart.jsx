@@ -52,8 +52,24 @@ const SentimentChart = ({ searchTerm }) => {
           pointRadius: 4,
         };
   
-        // Replace dataset instead of appending
-        setChartData({ datasets: [newDataset] });
+        setChartData((prevChartData) => {
+          const existingDatasetIndex = prevChartData.datasets.findIndex(
+            (dataset) => dataset.label === searchTerm
+          );
+  
+          if (existingDatasetIndex !== -1) {
+            const updatedDatasets = [...prevChartData.datasets];
+            updatedDatasets[existingDatasetIndex] = {
+              ...updatedDatasets[existingDatasetIndex],
+              data: newDataset.data,
+            };
+            return { datasets: updatedDatasets };
+          } else {
+            return {
+              datasets: [...prevChartData.datasets, newDataset],
+            };
+          }
+        });
       } catch (error) {
         console.error("Error fetching sentiment data:", error);
       }
@@ -61,6 +77,7 @@ const SentimentChart = ({ searchTerm }) => {
   
     fetchData();
   }, [searchTerm, refreshKey]);
+  
   
 
   const clearChart = () => {
@@ -80,7 +97,7 @@ const SentimentChart = ({ searchTerm }) => {
     responsive: true,
     plugins: {
       legend: {
-        display: chartData.datasets.length > 0, // Only show legend if there are datasets
+        display: chartData.datasets.length > 0,
       },
       title: {
         display: true,
@@ -92,8 +109,8 @@ const SentimentChart = ({ searchTerm }) => {
         cornerRadius: 4,
         displayColors: false,
         position: "nearest",
-        caretPadding: 30, // Padding between the tooltip pointer and the tooltip body
-        xAlign: "center",  // Horizontally center the tooltip relative to the point
+        caretPadding: 30,
+        xAlign: "center",  
         yAlign: "bottom", 
         callbacks: {
           title: () => "",
@@ -186,7 +203,6 @@ const SentimentChart = ({ searchTerm }) => {
           borderRadius: isFullScreen ? "0" : "10px",
         }}
       >
-        {/* Expand Button */}
         <button
           onClick={() => setIsFullScreen(true)}
           style={{
@@ -205,7 +221,6 @@ const SentimentChart = ({ searchTerm }) => {
           
         </button>
 
-        {/* Close Button for Full-Screen Mode */}
         {isFullScreen && (
           <button
             onClick={() => setIsFullScreen(false)}
