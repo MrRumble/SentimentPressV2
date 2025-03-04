@@ -24,11 +24,10 @@ def query():
     # Save search metadata for the query
     meta_data = SearchMetadata(user_id=None, search_term=query_text)
     search_metadata_repository.create(meta_data)
-    
+
     # Check if a result for the query exists today
     existing_result = search_result_repository.get_query_result_if_it_exists_today(query_text)
     if existing_result:
-        # Transform the existing result into a frontend-friendly format
         response_data_front_end = {
             'query_info': {
                 'total_articles': existing_result.total_article_count,
@@ -43,14 +42,15 @@ def query():
         print("Existing result found for query:", query_text)
         return jsonify(response_data_front_end), 200
 
-    # If no result exists for today, process the query and save the result
+    # Process the query and generate a summary
     response_data_front_end, search_result = processor.process_query(query_text)
 
-    # Handle case where no articles were found
-    if search_result is None:
-        return jsonify({"error": response_data_front_end.get("message", "No data found")}), 404
+    # 🔥 Prevent saving if summarization failed
+    if search_result is None or "API Error" in response_data_front_end.get("query_info", {}).get("summary", ""):
+        return jsonify({"error": "Summarization failed, result not saved"}), 500
 
     # Save the new search result to the database
     search_result_repository.create(search_result)
 
     return jsonify(response_data_front_end), 201
+

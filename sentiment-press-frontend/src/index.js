@@ -5,13 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { RefreshProvider } from './pages/RefreshContext';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  <RefreshProvider>
   <React.StrictMode>
     <App />
   </React.StrictMode>
+  </RefreshProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

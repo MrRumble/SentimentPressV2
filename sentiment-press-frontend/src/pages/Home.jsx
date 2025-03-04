@@ -3,6 +3,7 @@ import './Home.css';
 import GlobeComponent from '../components/Globe/Globe';
 import QueryComponent from '../components/QueryComponent/QueryComponent';
 import SentimentChart from '../components/SentimentChart/SentimentChart';
+import { useRefresh } from './RefreshContext';
 import { useLocation } from 'react-router-dom';
 
 const Homepage = () => {
@@ -10,6 +11,7 @@ const Homepage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
+  const { triggerRefresh } = useRefresh();
 
   useEffect(() => {
     // Extract search term from URL on initial load
@@ -27,6 +29,7 @@ const Homepage = () => {
     if (term.trim()) {
       setSearchTerm(term);
       setErrorMessage(''); // Clear any previous errors
+      triggerRefresh();
     } else {
       setErrorMessage('Query cannot be empty!');
     }
