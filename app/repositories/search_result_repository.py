@@ -130,7 +130,7 @@ class SearchResultRepository:
             "world", "politics", "business", "science", "health", "sports",
             "entertainment", "education", "environment", "uk", 
             "finance", "music", "technology", "stock market", "cryptocurrency", 
-            "weather", "crime", "kier starmer", "war", "trump", "ai", 
+            "weather", "crime", "starmer", "war", "trump", "ai", 
             "rugby", "gaza", "israel", "russia", "ukraine"
         ]
 

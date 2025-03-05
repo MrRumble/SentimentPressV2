@@ -15,11 +15,10 @@ news_categories = [
     "Finance", "Music", "Movies",
     'technology', "stock market", "Weather", "Crime", "Starmer",
     "war", "Trump", "AI", "Rugby", 'Gaza', 'Israel', 'Russia', 'Ukraine'
-    ]
+]
 
 @populate_route.route('/populate_database', methods=['POST'])
 def populate_database():
-
     processor = QueryProcessor()
     connection = get_flask_database_connection(current_app)
     search_result_repository = SearchResultRepository(connection)
@@ -29,27 +28,30 @@ def populate_database():
     if api_key != 'admin':
         return jsonify({"error": "Unauthorized"}), 401
 
-    # Run the population logic
     try:
-        start_time = time.time()  # Record start time
+        start_time = time.time() 
         print("Populating the database with predefined news categories...")
-        
+
         for category in news_categories:
-            # First, check if a search result exists for today
             existing_result = search_result_repository.get_query_result_if_it_exists_today(category)
-            
+
             if existing_result:
                 print(f"Search for category '{category}' already populated today.")
-            else:
-                # Proceed to process and insert the result if not found
-                print(f"Populating: {category}...")
-                _, search_result = processor.process_query(category)
-                search_result_repository.create(search_result)
-        
+                continue  # Skip if already populated
+
+            print(f"Populating: {category}...")
+            response_data_front_end, search_result = processor.process_query(category)
+
+            if search_result is None or "Error:" in response_data_front_end.get("query_info", {}).get("summary", ""):
+                print(f"Skipping '{category}' due to summarization failure.")
+                continue
+
+            search_result_repository.create(search_result)
+
         end_time = time.time()  # Record end time
         duration = end_time - start_time
-        print(f"Database population completed in {duration:.2f} seconds.")
         return jsonify({"message": "Database population completed successfully"}), 200
 
     except Exception as e:
+        print(f"Error during population: {str(e)}")
         return jsonify({"error": str(e)}), 500
