@@ -29,3 +29,6 @@ Proposed Fix: Add a note to indicate that data is only available for previously 
 Testing strategy and frameworks used
 CI/CD setup in GitHub
 Automated testing pipeline
+
+Should have seperated the summarising and the sentiment scoring, currently processed at the same time causing lag.
+Might have to introduce rate-limiting
