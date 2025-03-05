@@ -1,51 +1,44 @@
-import requests
-from dotenv import load_dotenv
 import os
+import torch
+import pandas as pd
+from transformers import pipeline
 
 class ArticleSummariser:
-    def __init__(self):
-        load_dotenv()
-        self.api_url = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
-        self.api_key = os.getenv("HUGGINGFACE_API_KEY")
+    def __init__(self, model_name="facebook/bart-large-cnn"):
+        # Load summarization model locally
+        self.device = 0 if torch.cuda.is_available() else -1  # Use GPU if available
+        self.summarizer = pipeline("summarization", model=model_name, device=self.device)
 
-    def send_to_huggingface(self, combined_text: str, max_length: int = 150, min_length: int = 50) -> str:
-        headers = {"Authorization": f"Bearer {self.api_key}"}
-        payload = {
-            "inputs": combined_text,
-            "parameters": {
-                "max_length": max_length,
-                "min_length": min_length
-            }
-        }
-        response = requests.post(self.api_url, headers=headers, json=payload)
+    def summarise_text(self, text: str, max_length: int = 150, min_length: int = 50) -> str:
+        """ Summarizes a given text using the loaded Hugging Face model. """
+        summary = self.summarizer(text, max_length=max_length, min_length=min_length, do_sample=False)
+        return summary[0]['summary_text']
 
-        try:
-            response_json = response.json()
-        except ValueError:
-            return f"API Error: Unable to parse response (status {response.status_code})"
-
-        if response.status_code == 200 and isinstance(response_json, list) and 'summary_text' in response_json[0]:
-            return response_json[0]['summary_text']
-        else:
-            return f"API Error: {response.status_code}, {response.text}"
-
-    def summarise_headlines(self, df) -> str:
-        combined_text = '. '.join(df['Title']) + '.'
-        max_length = 1024 
-        chunks = [combined_text[i:i + max_length] for i in range(0, len(combined_text), max_length)]
-
+    def summarise_headlines(self, df: pd.DataFrame) -> str:
+        """ Summarizes a large number of headlines by processing them in chunks. """
+        combined_text = '. '.join(df['Title']) + '.'  # Combine titles into one string
+        max_chunk_size = 1024  # Hugging Face models have a token limit (approx. 700 words)
+        
+        # Split into manageable chunks
+        chunks = [combined_text[i:i + max_chunk_size] for i in range(0, len(combined_text), max_chunk_size)]
         summaries = []
+
+        # Summarize each chunk separately
         for chunk in chunks:
-            result = self.send_to_huggingface(chunk, max_length=100, min_length=30)
-            if result.startswith("API Error"): 
-                print(f"Error summarizing chunk: {result}") 
-            else:
-                summaries.append(result)
+            try:
+                summary = self.summarise_text(chunk, max_length=100, min_length=30)
+                summaries.append(summary)
+            except Exception as e:
+                print(f"Error summarizing chunk: {e}")
 
+        # Combine chunk summaries and generate a final summary
         combined_summary = ' '.join(summaries)
-
         if combined_summary:
-            final_summary = self.send_to_huggingface(combined_summary, max_length=150, min_length=30)
-            return final_summary if not final_summary.startswith("API Error") else "Error: Final summarization failed."
+            try:
+                final_summary = self.summarise_text(combined_summary, max_length=150, min_length=50)
+                return final_summary
+            except Exception as e:
+                return f"Error: Final summarization failed: {e}"
         else:
-            return "Error: Unable to summarize due to API failure."
+            return "Error: Unable to summarize due to processing failure."
+
