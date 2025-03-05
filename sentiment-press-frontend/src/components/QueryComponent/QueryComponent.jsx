@@ -13,6 +13,7 @@ import SearchBar from '../../pages/Search';
 
 import { useRefresh } from "../../pages/RefreshContext";
 
+
 const QueryComponent = ({ onSearch, query }) => {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -84,7 +85,7 @@ const QueryComponent = ({ onSearch, query }) => {
       {isLoading ? (
         <div style={styles.spinnerContainer}>
           <div className="spinner"></div>
-          <p>Fetching and analyzing articles for "{query}"... Please wait.</p>
+          <p>"Fetching and analyzing articles for '{query}'... Hang tight! This may take a moment."</p>
         </div>
       ) : result ? (
         <div style={{ marginTop: '20px' }}>
