@@ -1,7 +1,6 @@
 from app.services.news_fetcher import NewsFetcher
 from app.services.article_processor import ArticleProcessor
 from app.services.sentiment_analyser import SentimentAnalyser
-from app.services.article_summariser import ArticleSummariser
 from app.services.data_handler import DataHandler
 
 """This class serves as the core component of our system, encapsulating all functionalities related to news and 
@@ -16,7 +15,6 @@ class NewsProcessor:
     def __init__(self):
         self.fetcher = NewsFetcher()
         self.processor = ArticleProcessor()
-        self.summarizer = ArticleSummariser()
         self.analyzer = SentimentAnalyser()
         self.data_handler = DataHandler()
 

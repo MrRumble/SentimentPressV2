@@ -1,11 +1,11 @@
-import os
+
 import torch
 import pandas as pd
 from transformers import pipeline
+from concurrent.futures import ThreadPoolExecutor
 
 class ArticleSummariser:
-    def __init__(self, model_name="facebook/bart-large-cnn"):
-        # Load summarization model locally
+    def __init__(self, model_name="sshleifer/distilbart-cnn-12-6"):
         self.device = 0 if torch.cuda.is_available() else -1  # Use GPU if available
         self.summarizer = pipeline("summarization", model=model_name, device=self.device)
 
@@ -16,20 +16,18 @@ class ArticleSummariser:
 
     def summarise_headlines(self, df: pd.DataFrame) -> str:
         """ Summarizes a large number of headlines by processing them in chunks. """
-        combined_text = '. '.join(df['Title']) + '.'  # Combine titles into one string
         max_chunk_size = 1024  # Hugging Face models have a token limit (approx. 700 words)
         
-        # Split into manageable chunks
-        chunks = [combined_text[i:i + max_chunk_size] for i in range(0, len(combined_text), max_chunk_size)]
+        # Split headlines into manageable chunks
+        headlines = df['Title'].apply(lambda x: x.strip())  # Preprocessing headlines
+        chunks = [headlines[i:i + 10] for i in range(0, len(headlines), 10)]  # Batch chunking
         summaries = []
 
-        # Summarize each chunk separately
-        for chunk in chunks:
-            try:
-                summary = self.summarise_text(chunk, max_length=100, min_length=30)
-                summaries.append(summary)
-            except Exception as e:
-                print(f"Error summarizing chunk: {e}")
+        # Use ThreadPoolExecutor to process chunks concurrently
+        with ThreadPoolExecutor() as executor:
+            results = executor.map(self.summarise_text_batch, chunks)
+            for result in results:
+                summaries.append(result)
 
         # Combine chunk summaries and generate a final summary
         combined_summary = ' '.join(summaries)
@@ -42,3 +40,7 @@ class ArticleSummariser:
         else:
             return "Error: Unable to summarize due to processing failure."
 
+    def summarise_text_batch(self, batch: pd.Series) -> str:
+        """Summarizes a batch of text (headlines)."""
+        batch_text = '. '.join(batch)
+        return self.summarise_text(batch_text, max_length=100, min_length=30)
