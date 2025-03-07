@@ -6,10 +6,10 @@ services:
     ports:
       - "5002:5002"
     environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_DB=sentiment_press_db_dev
-      - POSTGRES_USER=rumble
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     depends_on:
       - db
 
@@ -17,9 +17,9 @@ services:
     image: postgres:15
     restart: always
     environment:
-      - POSTGRES_DB=sentiment_press_db_dev
-      - POSTGRES_USER=rumble
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
