@@ -50,8 +50,7 @@ class ArticleProcessor:
         return None
 
     def validate_article(self, title, description, sentiment_score):
-        """Validates articles to prevent null or deleted entries."""
-        if sentiment_score is not None and title and description:
+        if sentiment_score != 0 and title is not None and description is not None:
             return '[Removed]' not in title and '[Removed]' not in description
         return False
 
