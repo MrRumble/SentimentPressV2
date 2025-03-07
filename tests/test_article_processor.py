@@ -97,7 +97,11 @@ def test_validate_article_removed_returns_false():
 
 # -------- Class level test for process_article (uses every other method)
 
-def test_process_article_valid_article():
+@patch('os.path.exists')
+def test_process_article_valid_article(mock_exists):
+    # Mock that the model directory always exists, preventing FileNotFoundError
+    mock_exists.return_value = True
+    
     processor = ArticleProcessor()
     article = {
         'title': 'Test Article 1',
@@ -106,6 +110,7 @@ def test_process_article_valid_article():
         'source': {'name': 'Source 1'}
     }
 
+    # Mocking individual methods used within `process_article`
     processor.extract_article_info = MagicMock(
         return_value=("Test Title", "Test Description", "2024-06-11T14:08:22Z", "Test Source"))
     processor.combine_text = MagicMock(return_value="title. description")
@@ -120,4 +125,5 @@ def test_process_article_valid_article():
         'Sentiment Score': 0.9
     }
 
+    # Assert that the result matches the expected output
     assert processor.process_article(article) == expected_result
