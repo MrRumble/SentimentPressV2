@@ -1,13 +1,22 @@
-
 import torch
 import pandas as pd
 from transformers import pipeline
 from concurrent.futures import ThreadPoolExecutor
+import os
 
 class ArticleSummariser:
-    def __init__(self, model_name="sshleifer/distilbart-cnn-12-6"):
+    def __init__(self, model_dir="./models/distilbart-cnn-12-6"):  # Adjusted path here
         self.device = 0 if torch.cuda.is_available() else -1  # Use GPU if available
-        self.summarizer = pipeline("summarization", model=model_name, device=self.device)
+        
+        # Define local model path directly pointing to the folder containing model files
+        self.model_path = os.path.abspath(model_dir)  # Convert to absolute path
+        
+        # Check if model directory exists, if not, raise an error
+        if not os.path.exists(self.model_path):
+            raise FileNotFoundError(f"Model directory {self.model_path} does not exist.")
+        
+        # Load the summarizer from the local path
+        self.summarizer = pipeline("summarization", model=self.model_path, device=self.device)
 
     def summarise_text(self, text: str, max_length: int = 150, min_length: int = 50) -> str:
         """ Summarizes a given text using the loaded Hugging Face model. """
