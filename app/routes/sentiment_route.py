@@ -20,7 +20,6 @@ def get_sentiment():
     connection = get_flask_database_connection(current_app)
     search_result_repository = SearchResultRepository(connection)
 
-    # Call the repository method to retrieve the data for the past 30 days
     try:
         results = search_result_repository.get_sentiment_over_time(search_term)
 
@@ -35,11 +34,10 @@ def get_sentiment():
                 'summary': summary
             })
         
-        # Prepare the data for Chart.js in the required format
         final_data = {
             "datasets": [
                 {
-                    "label": search_term,  # Using search_term as the label for the dataset
+                    "label": search_term,
                     "data": [
                         {"x": date, "y": organized_data[date][0]['sentiment'], "summary": organized_data[date][0]['summary']}
                         for date in sorted(organized_data.keys())

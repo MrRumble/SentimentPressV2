@@ -1,9 +1,8 @@
 from datetime import datetime
-from app.models.search_result_model import SearchResult  # Adjust import based on the actual path
+from app.models.search_result_model import SearchResult
 
 
 def test_initialisation():
-    # Test initialization with no arguments
     search_result = SearchResult()
     assert search_result.search_term is None
     assert search_result.mean_sentiment is None
@@ -19,7 +18,6 @@ def test_initialisation():
 
 
 def test_initialisation_with_values():
-    # Test initialization with arguments
     created_at = "2025-01-14 10:30:45"
     search_result = SearchResult(
         search_term="climate change",
@@ -46,9 +44,7 @@ def test_initialisation_with_values():
     assert search_result.created_at == created_at
     print("test_initialisation_with_values passed")
 
-
 def test_equality():
-    # Test equality comparison
     created_at = "2025-01-14 10:30:45"
     result1 = SearchResult(
         search_term="climate change",
@@ -91,9 +87,7 @@ def test_equality():
     assert result1 != result3
     print("test_equality passed")
 
-
 def test_representation():
-    # Test string representation
     created_at = "2025-01-14 10:30:45"
     search_result = SearchResult(
         search_term="climate change",
@@ -120,9 +114,7 @@ def test_representation():
     assert repr(search_result) == expected_repr
     print("test_representation passed")
 
-
 def test_to_dict():
-    # Test dictionary conversion
     created_at = "2025-01-14 10:30:45"
     search_result = SearchResult(
         search_term="climate change",

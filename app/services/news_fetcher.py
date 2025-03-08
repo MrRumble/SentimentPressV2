@@ -9,9 +9,6 @@ Note that our access is limited, restricting the range of query parameters avail
 With full access, numerous scalable features could be incorporated!"
 """
 
-
-# TESTED
-
 class NewsFetcher:
     def __init__(self):
         load_dotenv()

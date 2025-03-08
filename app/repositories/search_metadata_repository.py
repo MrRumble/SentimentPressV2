@@ -1,5 +1,5 @@
 import json
-from app.models.search_metadata_model import SearchMetadata  # Adjust path as needed
+from app.models.search_metadata_model import SearchMetadata
 
 class SearchMetadataRepository:
     def __init__(self, connection):
@@ -31,9 +31,9 @@ class SearchMetadataRepository:
         """
         result = self._connection.execute(query)
         
-        if result:  # Check if result is not empty
-            top_search_term = result[0]  # The first item will be the top search term
+        if result:
+            top_search_term = result[0]
             return top_search_term['search_term'], top_search_term['search_count']
         else:
-            return None, 0  # No searches today
+            return None, 0
 

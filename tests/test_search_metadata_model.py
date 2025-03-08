@@ -1,8 +1,7 @@
 from datetime import datetime
-from app.models.search_metadata_model import SearchMetadata  # Adjust import based on actual path
+from app.models.search_metadata_model import SearchMetadata
 
 def test_initialisation():
-    # Test initialization with no arguments
     search_metadata = SearchMetadata()
     assert search_metadata.search_term is None
     assert search_metadata.user_id is None
@@ -10,7 +9,6 @@ def test_initialisation():
     print("test_initialisation passed")
 
 def test_initialisation_with_values():
-    # Test initialization with arguments
     searched_at = "2025-01-14 10:30:45"
     search_metadata = SearchMetadata(
         search_term="blockchain",
@@ -24,7 +22,6 @@ def test_initialisation_with_values():
     print("test_initialisation_with_values passed")
 
 def test_equality():
-    # Test equality comparison
     searched_at = "2025-01-14 10:30:45"
     metadata1 = SearchMetadata(search_term="AI", user_id="user_001", searched_at=searched_at)
     metadata2 = SearchMetadata(search_term="AI", user_id="user_001", searched_at=searched_at)
@@ -35,7 +32,6 @@ def test_equality():
     print("test_equality passed")
 
 def test_representation():
-    # Test string representation
     searched_at = "2025-01-14 10:30:45"
     search_metadata = SearchMetadata(search_term="blockchain", user_id="user_123", searched_at=searched_at)
     
@@ -47,7 +43,6 @@ def test_representation():
     print("test_representation passed")
 
 def test_to_dict():
-    # Test dictionary conversion
     searched_at = "2025-01-14 10:30:45"
     search_metadata = SearchMetadata(search_term="blockchain", user_id="user_123", searched_at=searched_at)
     

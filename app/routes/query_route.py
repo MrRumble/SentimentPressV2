@@ -45,7 +45,6 @@ def query():
     if search_result is None or "Error:" in response_data_front_end.get("query_info", {}).get("summary", ""):
         return jsonify({"error": "Summarization failed, result not saved"}), 500
 
-    # Save the new search result to the database
     search_result_repository.create(search_result)
 
     return jsonify(response_data_front_end), 201

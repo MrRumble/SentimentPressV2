@@ -11,18 +11,15 @@ Articles are validated to prevent null results from deleted publications.
 Finally, articles are transformed into a delicious dictionary format, ready for use elsewhere.
 """
 
-# TESTED
 class ArticleProcessor:
-    _model = None  # Class variable to store the model
+    _model = None 
 
     def __init__(self, model_dir="./models/distilbert-base-uncased-finetuned-sst-2-english"):
-        self.model_path = os.path.abspath(model_dir)  # Convert to absolute path
+        self.model_path = os.path.abspath(model_dir)
 
-        # Check if model directory exists
         if not os.path.exists(self.model_path):
             raise FileNotFoundError(f"Model directory {self.model_path} does not exist.")
 
-        # Load sentiment analysis model once for efficiency
         if ArticleProcessor._model is None:
             ArticleProcessor._model = pipeline(
                 "sentiment-analysis", 

@@ -15,24 +15,22 @@ class QueryProcessor:
 
     def process_query(self, query):
         query = query.lower().strip()
-        # Fetch and process articles
+
         df_sorted = self.processor.fetch_and_process_query(query, 100)
         if df_sorted is None or df_sorted.empty:
             return {"message": f"No articles to process for query: {query}"}, None
-        # Calculate sentiment metrics
+
         mean_sentiment = self.analyser.calculate_average_sentiment(df_sorted)
         positive_count = self.analyser.calculate_positive_sentiment_count(df_sorted)
         negative_count = self.analyser.calculate_negative_sentiment_count(df_sorted)
         ratio = self.analyser.calculate_sentiment_ratio(positive_count, negative_count)
 
-        # Summarize top and bottom articles !!!
         df_summarised = self.summariser.summarise_headlines(df_sorted)
 
         top3 = self.processor.top_three_articles(df_sorted)
         bottom3 = self.processor.bottom_three_articles(df_sorted)
         total_articles = len(df_sorted)
 
-        # Prepare response data for front end
         query_info_front_end = {
             "total_articles": total_articles,
             "positive_count": positive_count,
@@ -47,7 +45,6 @@ class QueryProcessor:
             'bottom3': bottom3
         }
 
-        # Prepare the search result object based on the new model
         search_result = SearchResult(
             search_term=query,
             mean_sentiment=mean_sentiment,
@@ -60,5 +57,4 @@ class QueryProcessor:
             bottom_3_articles=bottom3,
         )
 
-        # Return both the front-end response data and the created search result object
         return response_data_front_end, search_result

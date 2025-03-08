@@ -84,7 +84,7 @@ class SearchResultRepository:
         Retrieves the sentiment data for a single search term over the last 30 days,
         with distinct entries per search term per day.
         """
-        # SQL query for getting sentiment data without duplicates from the same day for a single search term
+
         query = """
             SELECT DISTINCT ON (created_at::date)
                 search_term, 
@@ -97,23 +97,21 @@ class SearchResultRepository:
             ORDER BY created_at::date, created_at ASC;
         """
         
-        # Execute the query with the search_term as a parameter
         rows = self._connection.execute(query, [search_term])
 
-        # Check if any rows were returned
         if not rows:
             return []
 
-        # Process and return the results as a list of dictionaries
+
         results = []
         for row in rows:
-            # Here we adjust the date to match the date of the articles
+
             adjusted_date = row['date'] - timedelta(days=1)
         
             results.append({
                 "search_term": row['search_term'],
                 "mean_sentiment": row['mean_sentiment'],
-                "date": adjusted_date,  # This will be the date minus one day
+                "date": adjusted_date, 
                 "main_headline": row['main_headline'],
             })
 
@@ -144,9 +142,8 @@ class SearchResultRepository:
         rows = self._connection.execute(query_str, [news_categories, today])
 
         if not rows:
-            return []  # Return empty list if no results found
+            return []
 
-        # Process and return the results as a list of dictionaries
         results = [{"search_term": row["search_term"].capitalize(), "main_headline": row["main_headline"]} for row in rows]
 
         return results
@@ -168,7 +165,7 @@ class SearchResultRepository:
         rows = self._connection.execute(query, [today])
 
         if not rows:
-            return None  # Return None if no results found for today
+            return None 
 
         row = rows[0]
         return SearchResult(
@@ -202,7 +199,7 @@ class SearchResultRepository:
         rows = self._connection.execute(query, [today])
 
         if not rows:
-            return None  # Return None if no results found for today
+            return None
 
         row = rows[0]
         return SearchResult(

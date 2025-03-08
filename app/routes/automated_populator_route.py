@@ -5,6 +5,8 @@ from app.utils.database import get_flask_database_connection
 from flask_cors import CORS
 from flask import Blueprint
 import time
+from dotenv import load_dotenv
+import os
 
 populate_route = Blueprint('populate_route', __name__)
 CORS(populate_route)
@@ -19,13 +21,13 @@ news_categories = [
 
 @populate_route.route('/populate_database', methods=['POST'])
 def populate_database():
+    load_dotenv()
     processor = QueryProcessor()
     connection = get_flask_database_connection(current_app)
     search_result_repository = SearchResultRepository(connection)
 
-    # Ensure only authorised users/services can access this endpoint
-    api_key = request.headers.get('X-API-KEY')  # Replace with your auth mechanism
-    if api_key != 'admin':
+    api_key = request.headers.get('X-API-KEY')
+    if api_key != os.getenv('POPULATE_KEY'):
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
@@ -37,7 +39,7 @@ def populate_database():
 
             if existing_result:
                 print(f"Search for category '{category}' already populated today.")
-                continue  # Skip if already populated
+                continue
 
             print(f"Populating: {category}...")
             response_data_front_end, search_result = processor.process_query(category)
@@ -47,10 +49,9 @@ def populate_database():
                 continue
 
             search_result_repository.create(search_result)
-
-        end_time = time.time()  # Record end time
+        end_time = time.time()
         duration = end_time - start_time
-        return jsonify({"message": "Database population completed successfully"}), 200
+        return jsonify({f"message": "Database population completed successfully in {duration} seconds"}), 200
 
     except Exception as e:
         print(f"Error during population: {str(e)}")
