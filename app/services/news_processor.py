@@ -8,9 +8,6 @@ articles. It handles the extraction of articles from a search query and identifi
 based on sentiment scores. The 'query' parameter, received from the front-end server via query_route.py, is processed 
 through the 'fetch_and_process_query' method."""
 
-
-# TESTED
-
 class NewsProcessor:
     def __init__(self):
         self.fetcher = NewsFetcher()
