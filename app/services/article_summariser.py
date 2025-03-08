@@ -5,17 +5,14 @@ from concurrent.futures import ThreadPoolExecutor
 import os
 
 class ArticleSummariser:
-    def __init__(self, model_dir="./models/distilbart-cnn-12-6"):  # Adjusted path here
-        self.device = -1  # Force the use of CPU
+    def __init__(self, model_dir="./models/distilbart-cnn-12-6"):
+        self.device = -1
         
-        # Define local model path directly pointing to the folder containing model files
-        self.model_path = os.path.abspath(model_dir)  # Convert to absolute path
+        self.model_path = os.path.abspath(model_dir)
         
-        # Check if model directory exists, if not, raise an error
         if not os.path.exists(self.model_path):
             raise FileNotFoundError(f"Model directory {self.model_path} does not exist.")
         
-        # Load the summarizer from the local path
         self.summarizer = pipeline("summarization", model=self.model_path, device=self.device)
 
     def summarise_text(self, text: str, max_length: int = 150, min_length: int = 50) -> str:
@@ -25,20 +22,17 @@ class ArticleSummariser:
 
     def summarise_headlines(self, df: pd.DataFrame) -> str:
         """ Summarizes a large number of headlines by processing them in chunks. """
-        max_chunk_size = 1024  # Hugging Face models have a token limit (approx. 700 words)
+        max_chunk_size = 1024
         
-        # Split headlines into manageable chunks
-        headlines = df['Title'].apply(lambda x: x.strip())  # Preprocessing headlines
-        chunks = [headlines[i:i + 10] for i in range(0, len(headlines), 10)]  # Batch chunking
+        headlines = df['Title'].apply(lambda x: x.strip())
+        chunks = [headlines[i:i + 10] for i in range(0, len(headlines), 10)]
         summaries = []
 
-        # Use ThreadPoolExecutor to process chunks concurrently
         with ThreadPoolExecutor() as executor:
             results = executor.map(self.summarise_text_batch, chunks)
             for result in results:
                 summaries.append(result)
 
-        # Combine chunk summaries and generate a final summary
         combined_summary = ' '.join(summaries)
         if combined_summary:
             try:
