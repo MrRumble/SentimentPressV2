@@ -6,7 +6,7 @@ import os
 
 class ArticleSummariser:
     def __init__(self, model_dir="./models/distilbart-cnn-12-6"):  # Adjusted path here
-        self.device = 0 if torch.cuda.is_available() else -1  # Use GPU if available
+        self.device = -1  # Force the use of CPU
         
         # Define local model path directly pointing to the folder containing model files
         self.model_path = os.path.abspath(model_dir)  # Convert to absolute path
