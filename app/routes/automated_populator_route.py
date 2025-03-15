@@ -1,12 +1,11 @@
 from flask import jsonify, current_app, request
 from app.services.process_query import QueryProcessor
-from app.repositories.search_result_repository import SearchResultRepository
-from app.utils.database import get_flask_database_connection
 from flask_cors import CORS
 from flask import Blueprint
 import time
 from dotenv import load_dotenv
 import os
+import requests
 
 populate_route = Blueprint('populate_route', __name__)
 CORS(populate_route)
@@ -23,8 +22,8 @@ news_categories = [
 def populate_database():
     load_dotenv()
     processor = QueryProcessor()
-    connection = get_flask_database_connection(current_app)
-    search_result_repository = SearchResultRepository(connection)
+    
+    BASE_URL = os.getenv('BASE_URL', 'http://35.178.81.46:5002')
 
     api_key = request.headers.get('X-API-KEY')
     if api_key != os.getenv('POPULATE_KEY'):
@@ -35,12 +34,6 @@ def populate_database():
         print("Populating the database with predefined news categories...")
 
         for category in news_categories:
-            existing_result = search_result_repository.get_query_result_if_it_exists_today(category)
-
-            if existing_result:
-                print(f"Search for category '{category}' already populated today.")
-                continue
-
             print(f"Populating: {category}...")
             response_data_front_end, search_result = processor.process_query(category)
 
@@ -48,10 +41,29 @@ def populate_database():
                 print(f"Skipping '{category}' due to summarization failure.")
                 continue
 
-            search_result_repository.create(search_result)
+            data = {
+                "search_term": category.lower(),
+                "mean_sentiment": search_result.mean_sentiment,
+                "positive_article_count": search_result.positive_article_count,
+                "negative_article_count": search_result.negative_article_count,
+                "total_article_count": search_result.total_article_count,
+                "ratio_positive_vs_negative": search_result.ratio_positive_vs_negative,
+                "main_headline": search_result.main_headline,
+                "top_3_articles": search_result.top_3_articles,
+                "bottom_3_articles": search_result.bottom_3_articles
+            }
+
+            response = requests.post(f'{BASE_URL}/insert_data', json=data)
+
+            if response.status_code != 200:
+                print(f"Failed to insert data for category '{category}'. Response: {response.text}")
+                continue
+
+            print(f"Data for category '{category}' inserted successfully.")
+
         end_time = time.time()
         duration = end_time - start_time
-        return jsonify({f"message": "Database population completed successfully in {duration} seconds"}), 200
+        return jsonify({"message": f"Database population completed successfully in {duration} seconds"}), 200
 
     except Exception as e:
         print(f"Error during population: {str(e)}")
