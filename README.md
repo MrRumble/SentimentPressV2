@@ -1,5 +1,7 @@
 # SentimentPress Project by James Rumble
 
+Check it out here! --> [SentimentPress](http://sentimentpress-frontend-1.s3-website.eu-west-2.amazonaws.com/)
+
 ![SentimentPress Header](docs/SentimentPress.png)
 ## Table of Contents
 - [Journey](#journey)
@@ -185,6 +187,7 @@ I also made use of React Icons and implemented a React D3-speedometer to display
 My goal was to keep the design simple and functional, which is why the app consists of only two core pages, with the rest of the components nested within them. This minimal structure allowed me to focus on showcasing the backend functionality, which was the main focus of my project.
 
 ## Deployment
+
 Deploying the React frontend was very straightforward. I used Amazon S3, which made hosting simple and cost-effective. As part of this, I also dabbled in Terraform to automate some of the infrastructure setup. Since this is a hobby/portfolio project, keeping costs low was a priority throughout deployment.
 
 For the backend, my original plan was to host both the application and the database on a single EC2 micro instance, but I quickly ran into memory limitations—especially when trying to load models. Allocating RAM efficiently proved difficult, and an EC2 micro instance simply couldn't handle it. I briefly moved to an EC2 small instance, but even then, memory constraints became a huge hurdle.
@@ -198,7 +201,10 @@ To make this work, I:
 3. Created an insert_data route in the EC2 backend, which lets me post pre-processed data to the database via HTTP requests.
 4. Replaced the scheduled auto-population script (which would have required an expensive EC2 extra-large instance) with a local script that runs daily, processes the data, and sends the results to EC2.
 
-Although this reduced real-time usability, it was a necessary trade-off to keep costs low. In the process, I've gained invaluable experience with cloud computing, infrastructure challenges, and project optimization. This hands-on learning has given me a much deeper understanding of deployment strategies and system efficiency.
+Additionally, I created a second repository specifically for deploying the live backend and database code. This repository, [SentimentPressAPI](https://github.com/MrRumble/SentimentPressAPI), removes the heavy analysis tasks from the server, which are now handled locally, and focuses on the API calls for data processing. The changes in this repository are minimal, primarily removing the `services` directory and CPU-heavy dependencies, making it much lighter for EC2. The frontend was also tweaked to remove the user's ability to search freely and replaced it with a dropdown list of predefined categories.
+
+Although this reduced real-time usability, it was a necessary trade-off to keep costs low. In the process, I've gained invaluable experience with cloud computing, infrastructure challenges, and project optimisation. This hands-on learning has given me a much deeper understanding of deployment strategies and system efficiency.
+
 
 ## Future Improvements & Learnings
 There are several areas I would improve if I continued developing this project:
