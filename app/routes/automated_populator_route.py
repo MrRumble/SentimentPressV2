@@ -23,7 +23,7 @@ def populate_database():
     load_dotenv()
     processor = QueryProcessor()
     
-    BASE_URL = os.getenv('BASE_URL', 'http://35.178.81.46:5002')
+    BASE_URL = os.getenv('BASE_URL', 'http://18.169.54.136:5002')
 
     api_key = request.headers.get('X-API-KEY')
     if api_key != os.getenv('POPULATE_KEY'):
